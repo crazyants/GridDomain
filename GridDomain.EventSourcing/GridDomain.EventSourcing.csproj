@@ -45,8 +45,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateFactory.cs" />
+    <Compile Include="EventStream.cs" />
     <Compile Include="ConventionBasedConstructorNotFound.cs" />
     <Compile Include="DomainEvent.cs" />
+    <Compile Include="DontNowHowToApplyEventException.cs" />
+    <Compile Include="IAggregateState.cs" />
+    <Compile Include="IDomainAggregate.cs" />
     <Compile Include="ISourcedEvent.cs" />
     <Compile Include="IStatefullSaga.cs" />
     <Compile Include="IVersionedEvent.cs" />
@@ -54,6 +58,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Aggregates\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -4,19 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommonDomain.Core;
+using GridDomain.EventSourcing;
 
 namespace GridDomain.Balance.Domain.BusinessAggregate
 {
-    class Business : AggregateBase
+    class Business : IDomainAggregate
     {
         Guid BalanceId;
         Guid SubscriptionId;
-
         public string Name;
 
-        public Business(Guid id, string name,Guid subscriptionId, Guid balanceId)
+        public Guid Id { get; private set; }
+        public IAggregateState Events { get; }
+
+        public Business(Guid id, string name, Guid subscriptionId, Guid balanceId) : this(id)
         {
-            RaiseEvent(new BusinessCreatedEvent(id)
+            Events.Produce(new BusinessCreatedEvent(id)
             {
                 Names = name,
                 SubscriptionId = subscriptionId,
@@ -24,11 +27,17 @@ namespace GridDomain.Balance.Domain.BusinessAggregate
             });
         }
 
-        private void Apply(BusinessCreatedEvent e)
+        public Business(Guid id)
         {
-            Id = e.SourceId;
-            BalanceId = e.BalanceId;
-            SubscriptionId = e.SubscriptionId;
+            var events = new EventStream(id);
+            events.OnApply<BusinessCreatedEvent>(e =>
+            {
+                Id = e.SourceId;
+                BalanceId = e.BalanceId;
+                SubscriptionId = e.SubscriptionId;
+            });
+            Events = events;
         }
+
     }
 }
