@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.Scheduling", "Gr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerDemo", "SchedulerDemo\SchedulerDemo.csproj", "{2F2CDEC2-28CA-4520-B44A-BA7B5A399145}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.Aggregates", "GridDomain.Aggregates\GridDomain.Aggregates.csproj", "{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		AutoTesting|Any CPU = AutoTesting|Any CPU
@@ -341,6 +343,22 @@ Global
 		{2F2CDEC2-28CA-4520-B44A-BA7B5A399145}.Staging|Any CPU.Build.0 = Release|Any CPU
 		{2F2CDEC2-28CA-4520-B44A-BA7B5A399145}.StagingDebug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2F2CDEC2-28CA-4520-B44A-BA7B5A399145}.StagingDebug|Any CPU.Build.0 = Debug|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.AutoTesting|Any CPU.ActiveCfg = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.AutoTesting|Any CPU.Build.0 = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Production|Any CPU.ActiveCfg = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Production|Any CPU.Build.0 = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Sandbox|Any CPU.ActiveCfg = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Sandbox|Any CPU.Build.0 = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Staging|Any CPU.ActiveCfg = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.Staging|Any CPU.Build.0 = Release|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.StagingDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBEBB4BD-35EF-41BA-A164-7ADFC7998B02}.StagingDebug|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
