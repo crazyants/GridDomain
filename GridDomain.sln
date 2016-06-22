@@ -11,13 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.CQRS", "GridDoma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.EventStore.MSSQL", "GridDomain.EventStore.MSSQL\GridDomain.EventStore.MSSQL.csproj", "{08E73994-2FFA-424A-A138-E9FA1875F270}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.Domain", "GridDomain.Balance\BusinessNews.Domain.csproj", "{601F47B4-849C-49BC-AD2C-58B84DE229D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.Domain", "GridDomain.BusinessNews\BusinessNews.Domain.csproj", "{601F47B4-849C-49BC-AD2C-58B84DE229D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.Tests", "GridDomain.Balance.Tests\BusinessNews.Tests.csproj", "{E0523AC9-389C-48FA-A1C7-9AC5A15D8923}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.Tests", "GridDomain.BusinessNews.Tests\BusinessNews.Tests.csproj", "{E0523AC9-389C-48FA-A1C7-9AC5A15D8923}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.Logging", "GridDomain.Logging\GridDomain.Logging.csproj", "{E356647A-561E-4290-AD71-EF5DC92BF5C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.ReadModel", "GridDomain.Balance.ReadModel\BusinessNews.ReadModel.csproj", "{63B5A32B-3AE4-4CE3-A79D-3A4C0C3EC955}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.ReadModel", "GridDomain.BusinessNews.ReadModel\BusinessNews.ReadModel.csproj", "{63B5A32B-3AE4-4CE3-A79D-3A4C0C3EC955}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.Node", "GridDomain.Node\GridDomain.Node.csproj", "{760BE08A-D943-4A71-944E-938590527153}"
 EndProject
@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.CQRS.ReadModel",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.EventSourcing.Sagas", "GridDomain.EventSourcing.Sagas\GridDomain.EventSourcing.Sagas.csproj", "{EBA75163-804C-4C58-8E5E-6764C1155BE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.Node", "GridDomain.Balance.Node\BusinessNews.Node.csproj", "{BC419A4C-6DDD-493A-B395-45A5D5ACC555}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.Node", "GridDomain.BusinessNews.Node\BusinessNews.Node.csproj", "{BC419A4C-6DDD-493A-B395-45A5D5ACC555}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessNews.Tests.Acceptance", "BusinesNews.Tests.Acceptance\BusinessNews.Tests.Acceptance.csproj", "{F9FE7469-2EA0-4A37-BBB0-1433C0CB835B}"
 EndProject
@@ -40,6 +40,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GridDomain.Scheduling", "GridDomain.Scheduling\GridDomain.Scheduling.csproj", "{96037181-43D1-4AE5-A9E8-0660D4CC4C82}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchedulerDemo", "SchedulerDemo\SchedulerDemo.csproj", "{2F2CDEC2-28CA-4520-B44A-BA7B5A399145}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demos", "Demos", "{F4A83CF4-C344-40BB-A711-1AC1E26A728E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -351,5 +353,7 @@ Global
 		{63B5A32B-3AE4-4CE3-A79D-3A4C0C3EC955} = {32F0247A-24F4-4E20-95DC-7F6359913C3F}
 		{BC419A4C-6DDD-493A-B395-45A5D5ACC555} = {32F0247A-24F4-4E20-95DC-7F6359913C3F}
 		{F9FE7469-2EA0-4A37-BBB0-1433C0CB835B} = {32F0247A-24F4-4E20-95DC-7F6359913C3F}
+		{CBA63ABB-B5BF-4BBA-A4F1-4D89E192FF20} = {F4A83CF4-C344-40BB-A711-1AC1E26A728E}
+		{2F2CDEC2-28CA-4520-B44A-BA7B5A399145} = {F4A83CF4-C344-40BB-A711-1AC1E26A728E}
 	EndGlobalSection
 EndGlobal

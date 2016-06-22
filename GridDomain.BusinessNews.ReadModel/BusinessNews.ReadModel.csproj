@@ -112,7 +112,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GridDomain.Balance\BusinessNews.Domain.csproj">
+    <ProjectReference Include="..\GridDomain.BusinessNews\BusinessNews.Domain.csproj">
       <Project>{601F47B4-849C-49BC-AD2C-58B84DE229D6}</Project>
       <Name>BusinessNews.Domain</Name>
       <Private>True</Private>
