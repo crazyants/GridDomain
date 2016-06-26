@@ -3,6 +3,20 @@ using System.Linq;
 
 namespace GridDomain.EventSourcing
 {
+
+    public class DomainFutureEvent : DomainEvent
+    {
+        public DomainEvent Event { get; }
+
+        public DateTime RaiseTime { get; }
+
+        public DomainFutureEvent(Guid sourceId, DomainEvent @event, DateTime raiseTime, DateTime? createdTime = null, Guid sagaId = new Guid()) : base(sourceId, createdTime, sagaId)
+        {
+            Event = @event;
+            RaiseTime = raiseTime;
+        }
+    }
+
     public class DomainEvent : ISourcedEvent
     {
         public DomainEvent(Guid sourceId, DateTime? createdTime = null, Guid sagaId = default(Guid))
