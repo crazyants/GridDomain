@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Monitoring;
@@ -12,7 +13,7 @@ namespace GridDomain.Node.Actors
     /// <summary>
     /// Any child should be terminated by ShutdownRequest message
     /// </summary>
-    public abstract class PersistentHubActor: UntypedActor
+    public abstract class PersistentHubActor: UntypedActor, IWithUnboundedStash
     {
         protected readonly IDictionary<Guid, ChildInfo> Children = new Dictionary<Guid, ChildInfo>();
         private readonly IPersistentChildsRecycleConfiguration _recycleConfiguration;
@@ -44,15 +45,29 @@ namespace GridDomain.Node.Actors
            }
         }
 
+        private bool clearingState; 
         protected override void OnReceive(object message)
         {
             _monitor.IncrementMessagesReceived();
             if (message is ClearChilds)
             {
+                clearingState = true;
                 Clear();
                 return;
             }
+            if (message is ClearFinished)
+            {
+                clearingState = false;
+                Stash.UnstashAll();
+                return;
+            }
 
+            if (clearingState)
+            {
+                Stash.Stash();
+                return;
+            }
+                    
             ChildInfo knownChild;
             var childId = GetChildActorId(message);
             var name = GetChildActorName(message);
@@ -95,7 +110,11 @@ namespace GridDomain.Node.Actors
         {
             _monitor.IncrementActorRestarted();
         }
+
+        public IStash Stash { get; set; }
     }
 
-  
+    public class ClearFinished
+    {
+    }
 }

@@ -27,25 +27,21 @@ namespace GridDomain.Node.Actors
 
         public void IncrementMessagesReceived()
         {
-            //_context.IncrementMessagesReceived();
             IncrementCounter(CounterNames.ActorRestarts);
         }
 
         public void IncrementActorRestarted()
         {
-           // _context.IncrementActorRestart();
             IncrementCounter(CounterNames.ActorRestarts);
         }
 
         public void IncrementActorStopped()
         {
-          //  _context.IncrementActorStopped();
             IncrementCounter(CounterNames.ActorsStopped);
         }
 
         public void IncrementActorStarted()
         {
-            //_context.IncrementActorCreated();
             IncrementCounter(CounterNames.ActorsCreated);
         }
     }

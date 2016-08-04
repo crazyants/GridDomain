@@ -42,6 +42,7 @@ namespace GridDomain.Node.Actors
         protected override void PreRestart(Exception reason, object message)
         {
             _monitor.IncrementActorRestarted();
+            _log.Error(reason,message.ToString());
         }
     }
 }

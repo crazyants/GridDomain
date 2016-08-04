@@ -100,10 +100,10 @@ namespace GridDomain.Node
             _actorSystemFactory = actorSystemFactory;
             _quartzConfig = quartzConfig ?? new InMemoryQuartzConfig();
             _configuration = configuration;
-            _messageRouting = new CompositeRouteMap(messageRouting, 
-                                                    new SchedulingRouteMap(),
-                                                    new TransportMessageDumpMap()
-                                                    );
+            _messageRouting = new CompositeRouteMap(messageRouting);//, 
+                                                 //   new SchedulingRouteMap(),
+                                                   // new TransportMessageDumpMap()
+                                                    //);
             Container = new UnityContainer();
         }
 
@@ -134,9 +134,8 @@ namespace GridDomain.Node
             ConfigureContainer(Container, databaseConfiguration, _quartzConfig, System);
 
             var appInsightsConfig = Container.Resolve<IAppInsightsConfiguration>();
-            var monitor = new ActorAppInsightsMonitor(appInsightsConfig.Key);
 
-            ActorMonitoringExtension.RegisterMonitor(System, monitor);
+            ActorMonitoringExtension.RegisterMonitor(System, new ActorAppInsightsMonitor(appInsightsConfig.Key));
             ActorMonitoringExtension.RegisterMonitor(System, new ActorPerformanceCountersMonitor());
 
             StartMainNodeActor(System);
