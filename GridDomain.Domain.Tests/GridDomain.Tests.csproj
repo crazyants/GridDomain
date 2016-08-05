@@ -224,6 +224,7 @@
     <Compile Include="Aggregate_Sagas_actor_lifetime\PersistenceHubOnChildCreation.cs" />
     <Compile Include="Aggregate_Sagas_actor_lifetime\PersistenceHubOnChildInactive.cs" />
     <Compile Include="Aggregate_Sagas_actor_lifetime\PersistenceHubOnChildRecoverAfterTermination.cs" />
+    <Compile Include="Aggregate_Sagas_actor_lifetime\PersistenceHub_should_stash_messages_for_to_diying_child.cs" />
     <Compile Include="Aggregate_Sagas_actor_lifetime\PersistentHubTestsStatus.cs" />
     <Compile Include="Aggregate_Sagas_actor_lifetime\PersistentHub_children_lifetime_test.cs" />
     <Compile Include="Aggregate_Sagas_actor_lifetime\Actors\TestAggregateActor.cs" />
