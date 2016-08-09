@@ -35,7 +35,7 @@ namespace GridDomain.Tests.Tools
             {
                 var persistId = "testId";
 
-                repo.Save(persistId,events);
+                repo.Add(persistId,events);
                 var eventsLoaded = repo.Load(persistId).Cast<Message>();
                 CollectionAssert.AreEquivalent(events.Select(e => e.Id),eventsLoaded.Select(e=> e.Id));
             }

@@ -25,7 +25,7 @@ namespace GridDomain.Tools.Repositories
         }
 
 
-        public void Save(string id, params object[] messages)
+        public void Add(string id, params object[] messages)
         {
             var persistActor = CreateEventsPersistActor(id);
 

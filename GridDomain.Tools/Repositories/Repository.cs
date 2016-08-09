@@ -19,7 +19,7 @@ namespace GridDomain.Tools.Repositories
         public void Save<T>(T aggr) where T : IAggregate
         {
             var persistId = AggregateActorName.New<T>(aggr.Id).ToString();
-            _eventRepository.Save(persistId, aggr.GetUncommittedEvents().Cast<object>().ToArray());
+            _eventRepository.Add(persistId, aggr.GetUncommittedEvents().Cast<object>().ToArray());
             aggr.ClearUncommittedEvents();
         }
 

@@ -27,7 +27,7 @@ namespace GridDomain.Tests.Acceptance.Tools
             using (var eventsRepo = (IEventRepository) AkkaEventRepository.New(new AutoTestAkkaConfiguration()))
             {
                 string persistenceId = AggregateActorName.New<SampleAggregate>(_sourceId).ToString();
-                eventsRepo.Save(persistenceId, _createdEvent, _changedEvent);
+                eventsRepo.Add(persistenceId, _createdEvent, _changedEvent);
             }
 
             using (var repo = TestRepository.NewPersistent())

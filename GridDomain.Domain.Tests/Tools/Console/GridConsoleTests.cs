@@ -21,7 +21,7 @@ using NUnit.Framework;
 namespace GridDomain.Tests.Tools.Console
 {
     [TestFixture]
-    [Ignore("Ignored until faulire in bulk run fix")]
+    [Ignore("Ignored until failure in bulk run fix")]
     public class GridConsoleTests
     {
         private GridConsole _console;
