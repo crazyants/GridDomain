@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using GridDomain.CQRS;
 using GridDomain.Node;
 using GridDomain.Node.AkkaMessaging.Waiting;
 using GridDomain.Node.Configuration.Akka;
@@ -16,12 +17,13 @@ using GridDomain.Tests.SynchroniousCommandExecute;
 using GridDomain.Tools;
 using GridDomain.Tools.Console;
 using Microsoft.Practices.Unity;
+using NMoneys;
 using NUnit.Framework;
 
 namespace GridDomain.Tests.Tools.Console
 {
     [TestFixture]
-    [Ignore("Ignored until faulire in bulk run fix")]
+
     public class GridConsoleTests
     {
         private GridConsole _console;
@@ -39,7 +41,7 @@ namespace GridDomain.Tests.Tools.Console
 
             _node = new GridDomainNode(sampleDomainContainerConfiguration,
                                        new SampleRouteMap(container),
-                                       () => serverConfig.CreateInMemorySystem());
+                                       () => serverConfig.CreateSystem());
 
             _node.Start(new LocalDbConfiguration());
 
@@ -71,13 +73,27 @@ namespace GridDomain.Tests.Tools.Console
         [Then]
         public void Console_commands_are_executed()
         {
-            var command = new CreateSampleAggregateCommand(42, Guid.NewGuid(), Guid.NewGuid());
+            var testCommand = new ReplenishForCampaignCommand(new Guid("9B95ACDD-7E16-422A-9B92-658B7C7A7950"), "57ab2468cfb6ef06c47083bb", new Money(1000));
 
-            var expect = ExpectedMessage.Once<SampleAggregateCreatedEvent>(e => e.SourceId, command.AggregateId);
 
-            var evt = _console.Execute(command, TimeSpan.FromSeconds(30), expect);
-            Assert.AreEqual(command.Parameter.ToString(), evt.Value);
+            _console.Execute(testCommand);
         }
 
+    }
+
+    public class ReplenishForCampaignCommand : Command
+    {
+        public Guid AccountId { get; }
+
+        public string CampaignId { get; }
+
+        public Money Amount { get; }
+
+        public ReplenishForCampaignCommand(Guid accountId, string сampaignId, Money amount)
+        {
+            AccountId = accountId;
+            CampaignId = сampaignId;
+            Amount = amount;
+        }
     }
 }

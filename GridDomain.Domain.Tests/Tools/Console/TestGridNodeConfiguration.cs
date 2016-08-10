@@ -6,7 +6,7 @@ namespace GridDomain.Tests.Tools.Console
     class TestGridNodeConfiguration : AkkaConfiguration
     {
         public TestGridNodeConfiguration() : base(
-            new AkkaNetworkAddress("RemoteSystem","127.0.0.1",9000),
+            new AkkaNetworkAddress("RemoteSystem", "40.118.71.240", 9000),
             new AutoTestAkkaDbConfiguration())
         {
         }

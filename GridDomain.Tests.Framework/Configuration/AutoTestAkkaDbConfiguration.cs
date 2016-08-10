@@ -6,10 +6,10 @@ namespace GridDomain.Tests.Framework.Configuration
     public class AutoTestAkkaDbConfiguration : IAkkaDbConfiguration
     {
         public string SnapshotConnectionString
-            => "Data Source=(local);Database=AutoTestAkka;Integrated Security = true";
+            => "Server=tcp:soloinfra.cloudapp.net,5099;Database=stageMembershipWrite;User ID=solomoto;Password=s0l0moto;Connection Timeout=30;MultipleActiveResultSets=True";
 
         public string JournalConnectionString
-            => "Data Source=(local);Database=AutoTestAkka;Integrated Security = true";
+            => "Server=tcp:soloinfra.cloudapp.net,5099;Database=stageMembershipWrite;User ID=solomoto;Password=s0l0moto;Connection Timeout=30;MultipleActiveResultSets=True";
 
         public string MetadataTableName => "Metadata";
         public string JournalTableName => "JournalEntry";
