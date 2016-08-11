@@ -22,6 +22,25 @@ using NUnit.Framework;
 
 namespace GridDomain.Tests.Tools.Console
 {
+
+
+    [TestFixture]
+    public class Attach_to_staging
+    {
+    
+[Test]
+        public void Attach_to_existing_akka()
+        {
+
+            //tcp://Membership@jakku-solomembershipapi.azurewebsites.net:8181]
+            var server = new AkkaNetworkAddress("Membership", "jakku-solomembershipapi.azurewebsites.net", 8181);
+            var console = new GridConsole(server);
+            console.Connect();
+        }
+    }
+
+
+
     [TestFixture]
 
     public class GridConsoleTests

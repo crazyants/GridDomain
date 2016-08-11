@@ -26,7 +26,7 @@ namespace GridDomain.Tools.Console
         {
             _serverAddress = serverAddress;
 
-            var conf = clientConfiguration ?? new ConsoleAkkaConfiguretion();
+            var conf = clientConfiguration ?? new ConsoleAkkaConfiguretion(_serverAddress.Host);
 
             _consoleSystem = conf.CreateInMemorySystem();
         }
