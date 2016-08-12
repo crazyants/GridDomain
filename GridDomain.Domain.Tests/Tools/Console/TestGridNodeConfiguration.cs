@@ -3,10 +3,10 @@ using GridDomain.Tests.Framework.Configuration;
 
 namespace GridDomain.Tests.Tools.Console
 {
-    class TestGridNodeConfiguration : AkkaConfiguration
+    class RemotetGridNodeConfiguration : AkkaConfiguration
     {
-        public TestGridNodeConfiguration() : base(
-            new AkkaNetworkAddress("RemoteSystem","127.0.0.1",9000),
+        public RemotetGridNodeConfiguration() : base(
+            new AkkaNetworkAddress("RemoteSystem","localhost",9000),
             new AutoTestAkkaDbConfiguration())
         {
         }
