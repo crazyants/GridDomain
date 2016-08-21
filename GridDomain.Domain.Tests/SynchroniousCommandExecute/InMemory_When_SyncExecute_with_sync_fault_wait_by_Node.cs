@@ -23,6 +23,9 @@ namespace GridDomain.Tests.SynchroniousCommandExecute
 
         }
 
+    
+
+
         [Then]
         public void SyncExecute_throws_exception_from_aggregate_on_fault_wait_by_Node()
         {
