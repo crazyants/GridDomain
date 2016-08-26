@@ -43,6 +43,10 @@
       <HintPath>..\packages\Akka.DI.Unity.1.1.0\lib\net45\Akka.DI.Unity.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Automatonymous, Version=3.3.0.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Automatonymous.3.3.0\lib\net452\Automatonymous.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.4.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.0-Alpha1\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -135,6 +139,7 @@
     <Compile Include="Akka\Messages\ExecutionOptions.cs" />
     <Compile Include="Akka\Messages\ScheduleMessage.cs" />
     <Compile Include="Akka\Messages\ScheduleKey.cs" />
+    <Compile Include="Integration\ScheduledCommandProcessSaga.cs" />
     <Compile Include="SchedulerConfiguration.cs" />
     <Compile Include="Integration\CompleteJob.cs" />
     <Compile Include="Integration\StartSchedulerSaga.cs" />

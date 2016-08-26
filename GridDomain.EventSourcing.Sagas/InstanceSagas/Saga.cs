@@ -35,12 +35,12 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
 
             base.Event(propertyExpression);
             
-            DuringAny(
-                     When(machineEvent).Then(
+            DuringAny(When(machineEvent).Then(
                          ctx =>
                              OnEventReceived.Invoke(this,
                                  new EventReceivedData<TEventData, TSagaData>(ctx.Event, ctx.Data, ctx.Instance))));
         }
+
         public event EventHandler<StateChangedData<TSagaData>> OnStateEnter = delegate { };
         public event EventHandler<EventReceivedData<TSagaData>> OnEventReceived = delegate { };
         public event EventHandler<MessageReceivedData<TSagaData>> OnMessageReceived = delegate { };
@@ -60,12 +60,24 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
             this.RaiseEvent(progress, GetMachineEvent(message), message);
         }
 
-        private Event<TMessage> GetMachineEvent<TMessage>(TMessage message)
+        public void RaiseByUntypedMessage(TSagaData progress, object message)
         {
-            Event ev = null;
-            if (!_messagesToEventsMap.TryGetValue(typeof(TMessage), out ev))
-                throw new UnbindedMessageReceivedException(message, typeof(TMessage));
-            return (Event<TMessage>)ev;
+            OnMessageReceived.Invoke(this, new MessageReceivedData<TSagaData>(message, progress));
+            this.RaiseEvent(progress, GetMachineEvent(message), message);
+        }
+
+        protected virtual Event GetMachineEvent(object message)
+        {
+            Event ev;
+            var type = message.GetType();
+            if (!_messagesToEventsMap.TryGetValue(type, out ev))
+                throw new UnbindedMessageReceivedException(message, type);
+            return ev;
+        }
+
+        protected virtual Event<TMessage> GetMachineEvent<TMessage>(TMessage message)
+        {
+            return (Event<TMessage>)GetMachineEvent((object)message);
         }
     }
 }
