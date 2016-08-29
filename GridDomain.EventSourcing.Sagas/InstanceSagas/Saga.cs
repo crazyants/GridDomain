@@ -56,28 +56,23 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
 
         public void RaiseByMessage<TMessage>(TSagaData progress, TMessage message) where TMessage : class
         {
-            OnMessageReceived.Invoke(this,new MessageReceivedData<TSagaData>(message, progress));
-            this.RaiseEvent(progress, GetMachineEvent(message), message);
+             RaiseByMessage(progress, message, typeof(TMessage));
         }
 
-        public void RaiseByUntypedMessage(TSagaData progress, object message)
+        public void RaiseByMessage(TSagaData progress, object message, Type msgType = null)
         {
             OnMessageReceived.Invoke(this, new MessageReceivedData<TSagaData>(message, progress));
-            this.RaiseEvent(progress, GetMachineEvent(message), message);
+            this.RaiseEvent(progress, GetMachineEvent(message, msgType), message);
         }
 
-        protected virtual Event GetMachineEvent(object message)
+        protected virtual Event GetMachineEvent(object message, Type precalculatedType = null)
         {
             Event ev;
-            var type = message.GetType();
+            var type = precalculatedType ?? message.GetType();
             if (!_messagesToEventsMap.TryGetValue(type, out ev))
                 throw new UnbindedMessageReceivedException(message, type);
             return ev;
         }
 
-        protected virtual Event<TMessage> GetMachineEvent<TMessage>(TMessage message)
-        {
-            return (Event<TMessage>)GetMachineEvent((object)message);
-        }
     }
 }

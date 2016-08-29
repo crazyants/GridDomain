@@ -19,31 +19,55 @@ namespace GridDomain.Scheduling.Integration
         public Type SuccessEventType { get;  set; }
     }
 
+    //descriptor should be created separately due to unknown command type \ success message type
     public class ScheduledCommandProcessSaga: Saga<ScheduledCommandProcessSagaData>
     {
-        public static ISagaDescriptor Descriptor =
-            SagaExtensions.CreateDescriptor<ScheduledCommandProcessSaga,
-                                            ScheduledCommandProcessSagaData,
-                                            ScheduledCommandProcessingStarted>();
-
+        //public static ISagaDescriptor Descriptor =
+            //SagaExtensions.CreateDescriptor<ScheduledCommandProcessSaga,
+                                            //ScheduledCommandProcessSagaData,
+                                            ////ScheduledCommandProcessingStarted>();
+ 
         private readonly ISoloLogger _log = LogManager.GetLogger();
 
         public ScheduledCommandProcessSaga()
         {
-            
+            Event(()=>ProcessSuccess);
+            Event(()=>ProcessFailure);
+            Event(()=>StartProcess);
+
+            State(() => Created);
+            State(() => MessageSent);
+            State(() => ProcessingFailed);
+            State(() => ProcessingSucceded);
+
+            During(Created,
+                When(StartProcess).Then(context =>
+                {
+                    var key = context.Instance.Key;
+                    Dispatch(new CompleteJob(key.Name, key.Group));
+                    Dispatch(context.Instance.Command);
+                })
+                .TransitionTo(MessageSent));
+
+            During(MessageSent,
+                When(ProcessSuccess, ctx => ctx.Data.GetType() == ctx.Instance.SuccessEventType)
+                    .Then(context =>_log.Info("Scheduled command successfully processed {@Data}", context.Data))
+                    .TransitionTo(ProcessingSucceded),
+                When(ProcessFailure)
+                    .Then(context => _log.Error(context.Data.Exception, "Scheduled command processing failure, command: {@Data}", context.Data))
+                    .TransitionTo(ProcessingFailed));
         }
 
-        protected override Event<TMessage> GetMachineEvent<TMessage>(TMessage message)
+        protected override Event GetMachineEvent(object message, Type precalculatedType = null)
         {
             if (message is ICommandFault)
-                return ProcessFailure as Event<TMessage>;
+                return ProcessFailure;
 
             if (message is ScheduledCommandProcessingStarted)
-                return StartProcess as Event<TMessage>;
+                return StartProcess;
 
-            return ProcessSuccess as Event<TMessage>;
+            return ProcessSuccess;
         }
-
         public Event<ScheduledCommandProcessingStarted> StartProcess { get; private set; }
         public Event<ICommandFault> ProcessFailure { get; private set; }
         public Event<object> ProcessSuccess { get; private set; }

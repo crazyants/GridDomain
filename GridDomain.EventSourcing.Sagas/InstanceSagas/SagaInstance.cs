@@ -25,7 +25,6 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
     {
         public readonly Saga<TSagaData> Machine;
         private readonly SagaDataAggregate<TSagaData> _dataAggregate;
-        private readonly MethodInfo _transitGenericMethodInfo;
         private static readonly ISoloLogger Log = LogManager.GetLogger();
 
         public IReadOnlyCollection<object> CommandsToDispatch => Machine.CommandsToDispatch;
@@ -64,24 +63,16 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
 
             Machine.OnStateEnter += (sender, context) => dataAggregate.RememberTransition(context.Instance);
             Machine.OnEventReceived += (sender, context) => dataAggregate.RememberEvent(context.Event, context.SagaData, context.EventData);
-
-            _transitGenericMethodInfo = GetType()
-                                       .GetMethods()
-                                       .Single(m => m.IsGenericMethod && m.Name == nameof(Transit));
         }
 
         public void Transit(object message)
         {
-            var messageType = message.GetType();
-
-            var method = _transitGenericMethodInfo.MakeGenericMethod(messageType);
-
-            method.Invoke(this, new[] { message });
+            Machine.RaiseByMessage(_dataAggregate.Data, message);
         }
 
         public void Transit<TMessage>(TMessage message) where TMessage : class
         {
-            Machine.RaiseByMessage(_dataAggregate.Data, message);
+            Machine.RaiseByMessage(_dataAggregate.Data, message, typeof(TMessage));
         }
     }
 }
