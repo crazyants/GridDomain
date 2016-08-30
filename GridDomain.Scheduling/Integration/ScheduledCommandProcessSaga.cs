@@ -51,10 +51,10 @@ namespace GridDomain.Scheduling.Integration
 
             During(MessageSent,
                 When(ProcessSuccess, ctx => ctx.Data.GetType() == ctx.Instance.SuccessEventType)
-                    .Then(context =>_log.Info("Scheduled command successfully processed {@Data}", context.Data))
+                    .Then(context =>_log.Info("Scheduled command {Command} successfully processed, received event: {Data}", context.Instance.Command, context.Data))
                     .TransitionTo(ProcessingSucceded),
                 When(ProcessFailure)
-                    .Then(context => _log.Error(context.Data.Exception, "Scheduled command processing failure, command: {@Data}", context.Data))
+                    .Then(context => _log.Error(context.Data.Exception, "Scheduled command processing failure, command: {Data}", context.Data))
                     .TransitionTo(ProcessingFailed));
         }
 
