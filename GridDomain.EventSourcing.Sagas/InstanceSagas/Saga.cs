@@ -61,8 +61,19 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
 
         public void RaiseByMessage(TSagaData progress, object message, Type msgType = null)
         {
+            if (message == null)
+                throw new NullMessageRaiseException(progress);
+
             OnMessageReceived.Invoke(this, new MessageReceivedData<TSagaData>(message, progress));
-            this.RaiseEvent(progress, GetMachineEvent(message, msgType), message);
+
+            try
+            {
+                this.RaiseEvent(progress, GetMachineEvent(message, msgType), message);
+            }
+            catch(Exception ex)
+            {
+                throw new SagaTransitionException(message, progress, ex);
+            }
         }
 
         protected virtual Event GetMachineEvent(object message, Type precalculatedType = null)
@@ -74,5 +85,28 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
             return ev;
         }
 
+    }
+
+    public class SagaTransitionException : Exception
+    {
+        public object TransitionMessage { get; }
+        public ISagaState SagaData { get; }
+
+        public SagaTransitionException(object message, ISagaState progress, Exception inner)
+            :base("Saga transition raised an error",inner)
+        {
+            SagaData = progress;
+            TransitionMessage = message;
+        }
+    }
+
+    public class NullMessageRaiseException : Exception
+    {
+        public readonly object SagaData;
+
+        public NullMessageRaiseException(object sagaData):base("Saga was transitioned by null message")
+        {
+            SagaData = sagaData;
+        }
     }
 }
