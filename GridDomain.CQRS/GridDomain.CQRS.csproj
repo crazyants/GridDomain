@@ -59,9 +59,10 @@
     <Compile Include="CommandPlan.cs" />
     <Compile Include="ExpectedMessage.cs" />
     <Compile Include="ExpectedMessagesRecieved.cs" />
-    <Compile Include="GridNodeCommandingExtensions.cs" />
-    <Compile Include="GridNodeExtensions.cs" />
+    <Compile Include="CommandingExtensions.cs" />
+    <Compile Include="CommandExecutorExtensions.cs" />
     <Compile Include="ICommand.cs" />
+    <Compile Include="ICommandExecutor.cs" />
     <Compile Include="ICommandFault.cs" />
     <Compile Include="ICommandHandler.cs" />
     <Compile Include="ICriteria.cs" />

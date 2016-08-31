@@ -13,4 +13,18 @@ namespace GridDomain.Scheduling.Integration
             Group = group;
         }
     }
+
+    public class JobCompleted
+    {
+        public string Name { get; private set; }
+        public string Group { get; private set; }
+        public object Result { get; private set; }
+
+        public JobCompleted(string name, string group, object result)
+        {
+            Name = name;
+            Group = group;
+            Result = result;
+        }
+    }
 }
