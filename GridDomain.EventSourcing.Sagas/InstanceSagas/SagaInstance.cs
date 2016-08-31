@@ -72,7 +72,7 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
 
         public void Transit<TMessage>(TMessage message) where TMessage : class
         {
-            Machine.RaiseByMessage(_dataAggregate.Data, message, typeof(TMessage));
+            Machine.RaiseByMessage(_dataAggregate.Data, message);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace GridDomain.Scheduling.Integration
                     .TransitionTo(ProcessingFailed));
         }
 
-        protected override Event GetMachineEvent(object message, Type precalculatedType = null)
+        protected override Event GetMachineEvent(object message, ScheduledCommandProcessSagaData data)
         {
             if (message is ICommandFault)
                 return ProcessFailure;
@@ -66,7 +66,10 @@ namespace GridDomain.Scheduling.Integration
             if (message is ScheduledCommandProcessingStarted)
                 return StartProcess;
 
-            return ProcessSuccess;
+            if(message.GetType() == data.SuccessEventType)
+                return ProcessSuccess;
+
+            return base.GetMachineEvent(message, data);
         }
         public Event<ScheduledCommandProcessingStarted> StartProcess { get; private set; }
         public Event<ICommandFault> ProcessFailure { get; private set; }

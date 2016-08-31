@@ -54,12 +54,7 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
             base.State(propertyExpression);
         }
 
-        public void RaiseByMessage<TMessage>(TSagaData progress, TMessage message) where TMessage : class
-        {
-             RaiseByMessage(progress, message, typeof(TMessage));
-        }
-
-        public void RaiseByMessage(TSagaData progress, object message, Type msgType = null)
+        public void RaiseByMessage(TSagaData progress, object message)
         {
             if (message == null)
                 throw new NullMessageRaiseException(progress);
@@ -68,7 +63,7 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
 
             try
             {
-                this.RaiseEvent(progress, GetMachineEvent(message, msgType), message);
+                this.RaiseEvent(progress, GetMachineEvent(message, progress), message);
             }
             catch(Exception ex)
             {
@@ -76,10 +71,10 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
             }
         }
 
-        protected virtual Event GetMachineEvent(object message, Type precalculatedType = null)
+        protected virtual Event GetMachineEvent(object message, TSagaData data = null)
         {
             Event ev;
-            var type = precalculatedType ?? message.GetType();
+            var type = message.GetType();
             if (!_messagesToEventsMap.TryGetValue(type, out ev))
                 throw new UnbindedMessageReceivedException(message, type);
             return ev;

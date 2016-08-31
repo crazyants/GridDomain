@@ -1,4 +1,5 @@
 using System;
+using GridDomain.CQRS;
 using GridDomain.Node.AkkaMessaging.Waiting;
 using GridDomain.Tests.SampleDomain;
 using GridDomain.Tests.SampleDomain.Commands;
