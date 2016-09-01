@@ -30,10 +30,12 @@ namespace GridDomain.Scheduling.Integration
                                   ICommandExecutor executor,
                                   IPublisher publisher)
         {
-            _executor = executor;
             Condition.NotNull(() => quartzLogger);
             Condition.NotNull(() => executor);
+            Condition.NotNull(() => publisher);
 
+            _publisher = publisher;
+            _executor = executor;
             _quartzLogger = quartzLogger;
         }
 

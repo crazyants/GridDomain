@@ -31,7 +31,8 @@ namespace GridDomain.Scheduling
             container.RegisterInstance<IQuartzConfig>(_quartzConfig);
             container.RegisterType<IQuartzLogger, QuartzLogger>();
             container.RegisterType<IJobFactory, JobFactory>();
-            container.RegisterType<QuartzJob>();
+            //container.RegisterType<IJobFactory, JobFactory>();
+           // container.RegisterType<QuartzJob>();
             
             container.RegisterType<ILoggingJobListener, LoggingJobListener>();
             container.RegisterType<ILoggingSchedulerListener, LoggingSchedulerListener>();
@@ -41,12 +42,12 @@ namespace GridDomain.Scheduling
 
             //TODO: unify with GridDomain.Node.Configuration.Composition.SagaConfiguration
 
-            var factory = new ScheduledCommandProcessingSagaFactory();
-            var producer = new SagaProducer<ScheduledCommandProcessingSaga>();
-            producer.Register<ScheduledCommandProcessingStarted>(factory);
-            producer.Register<ScheduledCommandProcessingSagaState>(factory);
+           // var factory = new ScheduledCommandProcessingSagaFactory();
+           // var producer = new SagaProducer<ScheduledCommandProcessingSaga>();
+           // producer.Register<ScheduledCommandProcessingStarted>(factory);
+           // producer.Register<ScheduledCommandProcessingSagaState>(factory);
 
-            container.RegisterInstance<ISagaProducer<ScheduledCommandProcessingSaga>>(producer);
+          //  container.RegisterInstance<ISagaProducer<ScheduledCommandProcessingSaga>>(producer);
         }
     }
 }

@@ -89,7 +89,7 @@ namespace GridDomain.Tests.Acceptance.Scheduling
             DateTimeStrategyHolder.Current = new DefaultDateTimeStrategy();
             _container = GridNode.Container;
             CreateScheduler();
-            _scheduler = GridNode.System.ActorOf(GridNode.System.DI().Props<SchedulingActor>());
+            _scheduler = GridNode.System.ActorOf(GridNode.System.DI().Props<AdvancedSchedulingActor>());
             _quartzScheduler.Clear();
         }
 
@@ -166,9 +166,21 @@ namespace GridDomain.Tests.Acceptance.Scheduling
         }
 
         [Test]
-        public void Serializer_can_serialize_and_deserialize_polymorphic_types()
+        public void Serializer_can_serialize_and_deserialize_polymorphic_types_in_execution_options()
         {
             var withType = new ExecutionOptions<ScheduledCommandSuccessfullyProcessed>(DateTime.MaxValue);
+            var serializer = new Serializer();
+            var stream = new MemoryStream();
+            serializer.Serialize(withType, stream);
+            var bytes = stream.ToArray();
+            var deserialized = serializer.Deserialize<ExecutionOptions>(new MemoryStream(bytes));
+            Assert.True(deserialized.SuccessEventType == withType.SuccessEventType);
+        }
+
+        [Test]
+        public void Serializer_can_serialize_and_deserialize_polymorphic_types_in_extended_execution_options()
+        {
+            var withType = new ExtendedExecutionOptions(DateTime.MaxValue, typeof(ScheduledCommandSuccessfullyProcessed),Guid.Empty,"");
             var serializer = new Serializer();
             var stream = new MemoryStream();
             serializer.Serialize(withType, stream);

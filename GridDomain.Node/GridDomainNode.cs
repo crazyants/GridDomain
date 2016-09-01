@@ -109,7 +109,7 @@ namespace GridDomain.Node
             _quartzConfig = quartzConfig ?? new InMemoryQuartzConfig();
             _configuration = configuration;
             _messageRouting = new CompositeRouteMap(messageRouting, 
-                                                    new SchedulingRouteMap(),
+                                                    //new SchedulingRouteMap(),
                                                     new TransportMessageDumpMap()
                                                     );
             _commandTimeout = commandTimeout ?? DefaultCommandTimeout;
@@ -169,7 +169,8 @@ namespace GridDomain.Node
                                                                        _transportMode,
                                                                        quartzConfig));
 
-            var persistentScheduler = System.ActorOf(System.DI().Props<SchedulingActor>(),nameof(SchedulingActor));
+          //  var persistentScheduler = System.ActorOf(System.DI().Props<SchedulingActor>(),nameof(SchedulingActor));
+            var persistentScheduler = System.ActorOf(System.DI().Props<AdvancedSchedulingActor>(),nameof(AdvancedSchedulingActor));
             unityContainer.RegisterInstance(new TypedMessageActor<ScheduleMessage>(persistentScheduler));
             unityContainer.RegisterInstance(new TypedMessageActor<ScheduleCommand>(persistentScheduler));
             unityContainer.RegisterInstance(new TypedMessageActor<Unschedule>(persistentScheduler));
