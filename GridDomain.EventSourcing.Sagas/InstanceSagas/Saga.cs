@@ -54,19 +54,18 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
             base.State(propertyExpression);
         }
 
-        public void RaiseByMessage(TSagaData progress, object message)
+        public void Transit<T>(TSagaData progress, T message) where T:class
         {
             if (message == null)
-                throw new NullMessageRaiseException(progress);
+                throw new NullMessageTransitException(progress);
 
             OnMessageReceived.Invoke(this, new MessageReceivedData<TSagaData>(message, progress));
 
-          
             var machineEvent = GetMachineEvent(message);
 
             try
             {
-                this.RaiseEvent(progress, machineEvent, message);
+                this.RaiseEvent(progress, machineEvent, message).Wait();
             }
             catch(Exception ex)
             {
@@ -98,11 +97,11 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
         }
     }
 
-    public class NullMessageRaiseException : Exception
+    public class NullMessageTransitException : Exception
     {
         public readonly object SagaData;
 
-        public NullMessageRaiseException(object sagaData):base("Saga was transitioned by null message")
+        public NullMessageTransitException(object sagaData):base("Saga was transitioned by null message")
         {
             SagaData = sagaData;
         }

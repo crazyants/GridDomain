@@ -82,12 +82,17 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
 
         public void Transit(object message)
         {
-            Machine.RaiseByMessage(_dataAggregate.Data, message);
+            if(message == null)
+                throw new NullMessageTransitException(_dataAggregate.Data);
+
+            var msgType = message.GetType();
+            var method = _transitGenericMethodInfo.MakeGenericMethod(msgType);
+            method.Invoke(this,new [] { message});
         }
 
         public void Transit<TMessage>(TMessage message) where TMessage : class
         {
-            Machine.RaiseByMessage(_dataAggregate.Data, message);
+            Machine.Transit(_dataAggregate.Data, message);
         }
     }
 }
