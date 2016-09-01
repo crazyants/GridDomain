@@ -113,9 +113,9 @@ namespace SchedulerDemo.Actors
             _publisher.Publish(new Unschedule(new ScheduleKey(Guid.Empty, text, text)));
         }
 
-        private static ExtendedExecutionOptions CreateOptions(int seconds, Guid id)
+        private static CommandExecutionOptions CreateOptions(int seconds, Guid id)
         {
-            return new ExtendedExecutionOptions(DateTimeFacade.UtcNow.AddSeconds(seconds),
+            return new CommandExecutionOptions(DateTimeFacade.UtcNow.AddSeconds(seconds),
                 typeof(ScheduledCommandSuccessfullyProcessed),id, nameof(ScheduledCommandSuccessfullyProcessed.SourceId),
                 ExecutionTimeout);
         }

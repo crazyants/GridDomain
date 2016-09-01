@@ -13,11 +13,56 @@ using Wire;
 
 namespace GridDomain.Scheduling.Integration
 {
-    
+    //class MessageJobData<T>
+    //{
+    //    public ScheduleKey Key { get; set; }
+    //    public ExecutionOptions Options { get; set; }
+    //    public T Message { get; }
+
+    //    public MessageJobData(ScheduleKey key, ExecutionOptions options, T message)
+    //    {
+    //        Key = key;
+    //        Options = options;
+    //        Message = message;
+    //    }
+
+    //    public virtual void AddTo(JobDataMap map)
+    //    {
+    //        map.Add(nameof(Key), Serialize(Key));
+    //        map.Add(nameof(Options), Serialize(Options));
+    //        map.Add(nameof(Message), Serialize(Message));
+    //    }
+
+    //    public virtual MessageJobData Parse(JobDataMap map)
+    //    {
+    //        return new MessageJobData(
+    //                     Deserialize<ScheduleKey>(map[nameof(Key)] as byte[]),
+    //                     Deserialize<ExecutionOptions>(map[nameof(Options)] as byte[]),
+    //                     Deserialize<object>(map[nameof(Message)] as byte[])
+    //            );
+    //    }
+
+    //    private static byte[] Serialize(object source)
+    //    {
+    //        using (var stream = new MemoryStream())
+    //        {
+    //            new Serializer().Serialize(source, stream);
+    //            return stream.ToArray();
+    //        }
+    //    }
+    //    private static T Deserialize<T>(byte[] source)
+    //    {
+    //        using (var stream = new MemoryStream(source))
+    //        {
+    //            return new Serializer().Deserialize<T>(stream);
+    //        }
+    //    }
+    //}
+
     public class ScheduledQuartzJob : IJob
     {
         private const string CommandKey = nameof(CommandKey);
-        private const string EventKey = nameof(EventKey);
+        private const string MessageKey = nameof(MessageKey);
         private const string ScheduleKey = nameof(ScheduleKey);
         private const string ExecutionOptionsKey = nameof(ExecutionOptionsKey);
 
@@ -79,7 +124,7 @@ namespace GridDomain.Scheduling.Integration
             }
         }
 
-        public static IJobDetail Create(ScheduleKey key, Command command, ExtendedExecutionOptions executionOptions)
+        public static IJobDetail Create(ScheduleKey key, Command command, CommandExecutionOptions executionOptions)
         {
             var serializedCommand = Serialize(command);
             var serializedKey = Serialize(key);
@@ -94,15 +139,13 @@ namespace GridDomain.Scheduling.Integration
             return CreateJob(key, jobDataMap);
         }
 
-        public static IJobDetail Create(ScheduleKey key, DomainEvent eventToSchedule)
+        public static IJobDetail Create(ScheduleKey key, object message)
         {
-            var serializedEvent = Serialize(eventToSchedule);
-            var serializedKey = Serialize(key); var jobDataMap = new JobDataMap
-            {
-                { EventKey, serializedEvent },
-                { ScheduleKey, serializedKey }
-            };
-            return CreateJob(key, jobDataMap);
+            return CreateJob(key, new JobDataMap
+                                  {
+                                      { MessageKey, Serialize(message) },
+                                      { ScheduleKey, Serialize(key) }
+                                  });
         }
 
         private static byte[] Serialize(object source)
@@ -134,10 +177,10 @@ namespace GridDomain.Scheduling.Integration
             return Deserialize<ScheduleKey>(bytes);
         }
 
-        private static ExtendedExecutionOptions GetExecutionOptions(JobDataMap jobDatMap)
+        private static CommandExecutionOptions GetExecutionOptions(JobDataMap jobDatMap)
         {
             var bytes = jobDatMap[ExecutionOptionsKey] as byte[];
-            return Deserialize<ExtendedExecutionOptions>(bytes);
+            return Deserialize<CommandExecutionOptions>(bytes);
         }
 
         private static IJobDetail CreateJob(ScheduleKey key, JobDataMap jobDataMap)

@@ -151,7 +151,7 @@ namespace GridDomain.Tests.Acceptance.Scheduling
         [Test]
         public void Serializer_can_serialize_and_deserialize_polymorphic_types_in_extended_execution_options()
         {
-            var withType = new ExtendedExecutionOptions(DateTime.MaxValue, typeof(ScheduledCommandSuccessfullyProcessed),Guid.Empty,"");
+            var withType = new CommandExecutionOptions(DateTime.MaxValue, typeof(ScheduledCommandSuccessfullyProcessed),Guid.Empty,"");
             var serializer = new Serializer();
             var stream = new MemoryStream();
             serializer.Serialize(withType, stream);
@@ -169,9 +169,9 @@ namespace GridDomain.Tests.Acceptance.Scheduling
             WaitFor<QuartzJobCompleted>();
         }
 
-        private ExtendedExecutionOptions CreateOptions(double seconds, Guid id)
+        private CommandExecutionOptions CreateOptions(double seconds, Guid id)
         {
-            return new ExtendedExecutionOptions(DateTimeFacade.UtcNow.AddSeconds(seconds),
+            return new CommandExecutionOptions(DateTimeFacade.UtcNow.AddSeconds(seconds),
                                                 typeof(ScheduledCommandSuccessfullyProcessed),
                                                 id,
                                                 nameof(ScheduledCommandSuccessfullyProcessed.SourceId),

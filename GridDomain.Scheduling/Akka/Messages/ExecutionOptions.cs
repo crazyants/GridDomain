@@ -18,20 +18,18 @@ namespace GridDomain.Scheduling.Akka.Messages
     }
     public class ExecutionOptions<TSuccessEvent> : ExecutionOptions where TSuccessEvent : DomainEvent
     {
-       // public new TSuccessEvent SuccessEventType => typeof(TSuccessEvent);
-
         public ExecutionOptions(DateTime runAt, TimeSpan timeout = new TimeSpan()) : base(runAt, typeof(TSuccessEvent),timeout)
         {
         }
     }
 
 
-    public class ExtendedExecutionOptions : ExecutionOptions
+    public class CommandExecutionOptions : ExecutionOptions
     {
         public Guid SuccessMessageId { get; }
         public string MessageIdFieldName { get; }
 
-        public ExtendedExecutionOptions(DateTime runAt, Type succesEventType, Guid messageId, string messageIdFieldName, TimeSpan timeout = new TimeSpan()) : base(runAt, succesEventType, timeout)
+        public CommandExecutionOptions(DateTime runAt, Type succesEventType, Guid messageId, string messageIdFieldName, TimeSpan timeout = new TimeSpan()) : base(runAt, succesEventType, timeout)
         {
             SuccessMessageId = messageId;
             MessageIdFieldName = messageIdFieldName;
