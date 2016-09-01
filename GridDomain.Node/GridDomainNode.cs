@@ -155,6 +155,8 @@ namespace GridDomain.Node
 
             StartController(System);
 
+            
+
             Transport = Container.Resolve<IActorTransport>();
             _quartzScheduler = Container.Resolve<Quartz.IScheduler>();
         }
@@ -169,7 +171,6 @@ namespace GridDomain.Node
                                                                        _transportMode,
                                                                        quartzConfig));
 
-          //  var persistentScheduler = System.ActorOf(System.DI().Props<SchedulingActor>(),nameof(SchedulingActor));
             var persistentScheduler = System.ActorOf(System.DI().Props<AdvancedSchedulingActor>(),nameof(AdvancedSchedulingActor));
             unityContainer.RegisterInstance(new TypedMessageActor<ScheduleMessage>(persistentScheduler));
             unityContainer.RegisterInstance(new TypedMessageActor<ScheduleCommand>(persistentScheduler));
@@ -180,7 +181,7 @@ namespace GridDomain.Node
         }
 
         bool _stopping = false;
-        private NodeCommandExecutor _commandExecutor;
+        private CommandExecutor _commandExecutor;
 
         public EventAdaptersCatalog EventAdaptersCatalog { get; } = AkkaDomainEventsAdapter.UpgradeChain;
 
@@ -211,7 +212,9 @@ namespace GridDomain.Node
 
             _log.Info("GridDomain node {Id} started at home {Home}", Id, actorSystem.Settings.Home);
 
-            _commandExecutor = new NodeCommandExecutor(_nodeController,_commandTimeout);
+            _commandExecutor = CommandExecutor.New(System,_commandTimeout);
+            //TODO: gather all container registrations to one place in gridNode
+            Container.RegisterInstance<ICommandExecutor>(_commandExecutor);
         }
 
         public void Execute(params ICommand[] commands)

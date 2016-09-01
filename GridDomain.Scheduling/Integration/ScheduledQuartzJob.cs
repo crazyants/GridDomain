@@ -55,7 +55,7 @@ namespace GridDomain.Scheduling.Integration
                     var expect = ExpectedMessage.Once(options.SuccessEventType,options.MessageIdFieldName,options.SuccessMessageId);
                     var plan = new CommandPlan(command, options.Timeout, expect);
                     var result = _executor.Execute<object>(plan);
-                    _publisher.Publish(new JobCompleted(key.Name,key.Group,result));
+                    _publisher.Publish(new QuartzJobCompleted(key.Name,key.Group,result));
                 }
                 else
                 {
@@ -71,7 +71,7 @@ namespace GridDomain.Scheduling.Integration
             }
         }
 
-        public static IJobDetail Create(ScheduleKey key, Command command, ExecutionOptions executionOptions)
+        public static IJobDetail Create(ScheduleKey key, Command command, ExtendedExecutionOptions executionOptions)
         {
             var serializedCommand = Serialize(command);
             var serializedKey = Serialize(key);

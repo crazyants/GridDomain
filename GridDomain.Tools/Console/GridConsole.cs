@@ -19,7 +19,7 @@ namespace GridDomain.Tools.Console
         public IActorRef NodeController;
         private static readonly TimeSpan NodeControllerResolveTimeout = TimeSpan.FromSeconds(60);
         private static readonly TimeSpan DefaultCommandExecutionTimeout = TimeSpan.FromSeconds(10);
-        private NodeCommandExecutor _commandExecutor;
+        private CommandExecutor _commandExecutor;
         private readonly IAkkaNetworkAddress _serverAddress;
 
         public GridConsole(IAkkaNetworkAddress serverAddress, AkkaConfiguration clientConfiguration = null)
@@ -47,7 +47,7 @@ namespace GridDomain.Tools.Console
         {
             NodeController = GetActor(GetSelection(nameof(GridNodeController)));
 
-            _commandExecutor = new NodeCommandExecutor(NodeController, DefaultCommandExecutionTimeout);
+            _commandExecutor = new CommandExecutor(NodeController, DefaultCommandExecutionTimeout);
         }
       
         public void Dispose()

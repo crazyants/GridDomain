@@ -139,6 +139,7 @@
     <Compile Include="Akka\Messages\ExecutionOptions.cs" />
     <Compile Include="Akka\Messages\ScheduleMessage.cs" />
     <Compile Include="Akka\Messages\ScheduleKey.cs" />
+    <Compile Include="Integration\AdvancedSchedulingActor.cs" />
     <Compile Include="Integration\ScheduledCommandProcessSaga.cs" />
     <Compile Include="Integration\ScheduledQuartzJob.cs" />
     <Compile Include="SchedulerConfiguration.cs" />

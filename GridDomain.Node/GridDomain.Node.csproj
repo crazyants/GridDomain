@@ -236,6 +236,7 @@
     <Compile Include="Actors\ChildInfo.cs" />
     <Compile Include="Actors\CommandExecutionFailedException.cs" />
     <Compile Include="Actors\CommandExecutionFinished.cs" />
+    <Compile Include="Actors\CommandExecutorActor.cs" />
     <Compile Include="Actors\DefaultPersistentChildsRecycleConfiguration.cs" />
     <Compile Include="Configuration\Akka\AkkaNetworkAdressExtensions.cs" />
     <Compile Include="Configuration\Akka\Hocon\TypeExtensions.cs" />
@@ -287,7 +288,7 @@
     <Compile Include="EventChronicles\RecoveryInProgress.cs" />
     <Compile Include="IAppInsightsConfiguration.cs" />
     <Compile Include="IPerformanceCountersConfiguration.cs" />
-    <Compile Include="NodeCommandExecutor.cs" />
+    <Compile Include="CommandExecutor.cs" />
     <Compile Include="PerformanceCountersConfigSection.cs" />
     <Compile Include="SerilogExtendedLogger.cs" />
     <Compile Include="Configuration\Akka\Hocon\ActorConfig.cs" />

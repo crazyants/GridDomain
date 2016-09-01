@@ -1,29 +1,20 @@
 ﻿using System;
 using Akka.Actor;
 using Akka.DI.Core;
-using GridDomain.CQRS;
 using GridDomain.CQRS.Messaging;
-using GridDomain.CQRS.Messaging.Akka;
 using GridDomain.Logging;
 using GridDomain.Node.AkkaMessaging;
-using GridDomain.Node.AkkaMessaging.Waiting;
 
 namespace GridDomain.Node.Actors
 {
     public class GridNodeController : TypedActor
     {
         private readonly ISoloLogger _log = LogManager.GetLogger();
-        private readonly IPublisher _messagePublisher;
         private readonly IMessageRouteMap _messageRouting;
-        private readonly IActorSubscriber _subscriber;
 
-        public GridNodeController(IPublisher transport,
-                                  IActorSubscriber subscriber,
-                                  IMessageRouteMap messageRouting)
+        public GridNodeController(IMessageRouteMap messageRouting)
         {
-            _subscriber = subscriber;
             _messageRouting = messageRouting;
-            _messagePublisher = transport;
             _monitor = new ActorMonitor(Context);
         }
 
@@ -40,22 +31,6 @@ namespace GridDomain.Node.Actors
 
             //TODO: replace with message from router
             Context.System.Scheduler.ScheduleTellOnce(TimeSpan.FromSeconds(3), Sender, new Started(), Self);
-        }
-
-        public void Handle(ICommand cmd)
-        {
-            _monitor.IncrementMessagesReceived();
-            _messagePublisher.Publish(cmd);
-        }
-
-        public void Handle(CommandPlan commandWithConfirmation)
-        {
-            var waitActor = Context.System.ActorOf(Props.Create(() => new CommandWaiter(Sender, commandWithConfirmation.Command,commandWithConfirmation.ExpectedMessages)),"MessageWaiter_command_"+commandWithConfirmation.Command.Id);
-
-            foreach(var expectedMessage in commandWithConfirmation.ExpectedMessages)
-                    _subscriber.Subscribe(expectedMessage.MessageType, waitActor);
-
-            Handle(commandWithConfirmation.Command);
         }
         
         public class Start

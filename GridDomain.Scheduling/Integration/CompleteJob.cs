@@ -14,13 +14,13 @@ namespace GridDomain.Scheduling.Integration
         }
     }
 
-    public class JobCompleted
+    public class QuartzJobCompleted
     {
         public string Name { get; private set; }
         public string Group { get; private set; }
         public object Result { get; private set; }
 
-        public JobCompleted(string name, string group, object result)
+        public QuartzJobCompleted(string name, string group, object result)
         {
             Name = name;
             Group = group;

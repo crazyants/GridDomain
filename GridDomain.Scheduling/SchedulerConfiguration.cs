@@ -32,7 +32,7 @@ namespace GridDomain.Scheduling
             container.RegisterType<IQuartzLogger, QuartzLogger>();
             container.RegisterType<IJobFactory, JobFactory>();
             //container.RegisterType<IJobFactory, JobFactory>();
-           // container.RegisterType<QuartzJob>();
+            container.RegisterType<ScheduledQuartzJob>();
             
             container.RegisterType<ILoggingJobListener, LoggingJobListener>();
             container.RegisterType<ILoggingSchedulerListener, LoggingSchedulerListener>();

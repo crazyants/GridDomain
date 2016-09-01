@@ -156,7 +156,10 @@ namespace GridDomain.Node.Actors
 
             var scheduleEvent = new ScheduleCommand(new RaiseScheduledDomainEventCommand(message.Id, message.SourceId),
                                                     scheduleKey,
-                                                    new ExecutionOptions(message.RaiseTime, message.Event.GetType()));
+                                                    new ExtendedExecutionOptions(message.RaiseTime,
+                                                                                 message.Event.GetType(),
+                                                                                 message.Event.SourceId,
+                                                                                 nameof(message.Event.SourceId)));
 
             _schedulerActorRef.Handle(scheduleEvent);
         }

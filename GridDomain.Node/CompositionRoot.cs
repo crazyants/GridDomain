@@ -2,6 +2,7 @@
 using System.Configuration;
 using Akka.Actor;
 using CommonDomain.Persistence;
+using GridDomain.CQRS;
 using GridDomain.CQRS.Messaging;
 using GridDomain.CQRS.Messaging.Akka;
 using GridDomain.EventSourcing;
@@ -52,15 +53,6 @@ namespace GridDomain.Node
                                                                   new DefaultPerfCountersConfiguration());
             container.RegisterInstance(actorSystem);
             container.Register(new SchedulerConfiguration(config ?? new PersistedQuartzConfig()));
-
-              //public SagaActor(ISagaFactory<TSaga, object> sagaStarter,
-              //                 ISagaFactory<TSaga, TSagaState> sagaFactory,
-              //                 IPublisher publisher,
-              //                 Type[] startMessages)
-
-            //container.RegisterType(typeof(SagaActor<,>),
-                                    //new InjectionConstructor(
-                                    //new InjectionParameter<Type[]>(nameof(TSaga))))
         }
     }
 

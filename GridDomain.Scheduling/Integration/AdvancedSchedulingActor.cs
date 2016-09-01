@@ -7,10 +7,10 @@ using IScheduler = Quartz.IScheduler;
 
 namespace GridDomain.Scheduling.Integration
 {
-    public class SchedulingActor : ReceiveActor
+    public class AdvancedSchedulingActor : ReceiveActor
     {
         private readonly IScheduler _scheduler;
-        public SchedulingActor(IScheduler scheduler)
+        public AdvancedSchedulingActor(IScheduler scheduler)
         {
             _scheduler = scheduler;
             Receive<ScheduleCommand>(message => Schedule(message));
@@ -34,12 +34,12 @@ namespace GridDomain.Scheduling.Integration
 
         private void Schedule(ScheduleCommand message)
         {
-            Schedule(() => QuartzJob.Create(message.Key, message.Command, message.Options), message.Options.RunAt, message.Key);
+            Schedule(() => ScheduledQuartzJob.Create(message.Key, message.Command, message.Options), message.Options.RunAt, message.Key);
         }
 
         private void Schedule(ScheduleMessage message)
         {
-            Schedule(() => QuartzJob.Create(message.Key, message.Event), message.RunAt, message.Key);
+            Schedule(() => ScheduledQuartzJob.Create(message.Key, message.Event), message.RunAt, message.Key);
         }
 
         private void Schedule(Func<IJobDetail> jobFactory, DateTime runAt, ScheduleKey key)
@@ -48,15 +48,14 @@ namespace GridDomain.Scheduling.Integration
             {
                 var job = jobFactory();
                 var trigger = TriggerBuilder.Create()
-                                            .WithIdentity(job.Key.Name, job.Key.Group)
-                                            .WithSimpleSchedule(x => x.WithMisfireHandlingInstructionFireNow()
-                                                                      .WithRepeatCount(0))
-                                            .StartAt(runAt)
-                                            .Build();
+                    .WithIdentity(job.Key.Name, job.Key.Group)
+                    .WithSimpleSchedule(x => x.WithMisfireHandlingInstructionFireNow()
+                        .WithRepeatCount(0))
+                    .StartAt(runAt)
+                    .Build();
 
                 var fireTime = _scheduler.ScheduleJob(job, trigger);
                 Sender.Tell(new Scheduled(fireTime.UtcDateTime));
-
             }
             catch (JobPersistenceException e)
             {
@@ -69,18 +68,6 @@ namespace GridDomain.Scheduling.Integration
             {
                 Sender.Tell(new Failure { Exception = e, Timestamp = DateTimeFacade.UtcNow });
             }
-        }
-
-        protected override void PreStart()
-        {
-            _scheduler.Start();
-            base.PreStart();
-        }
-
-        protected override void PostStop()
-        {
-            _scheduler.Shutdown();
-            base.PostStop();
         }
     }
 }

@@ -22,10 +22,6 @@ namespace GridDomain.Scheduling.Integration
     //descriptor should be created separately due to unknown command type \ success message type
     public class ScheduledCommandProcessSaga: Saga<ScheduledCommandProcessSagaData>
     {
-        //public static ISagaDescriptor Descriptor =
-            //SagaExtensions.CreateDescriptor<ScheduledCommandProcessSaga,
-                                            //ScheduledCommandProcessSagaData,
-                                            ////ScheduledCommandProcessingStarted>();
  
         private readonly ISoloLogger _log = LogManager.GetLogger();
 

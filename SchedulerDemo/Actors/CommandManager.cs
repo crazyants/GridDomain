@@ -60,7 +60,8 @@ namespace SchedulerDemo.Actors
                 _publisher.Publish(new WriteToConsole("wrong command format"));
             }
             var longTimeScheduledCommand = new LongTimeScheduledCommand("longtime", TimeSpan.FromSeconds(seconds));
-            _publisher.Publish(new ScheduleCommand(longTimeScheduledCommand, new ScheduleKey(Guid.Empty, "long", "long"), CreateOptions(seconds)));
+            _publisher.Publish(new ScheduleCommand(longTimeScheduledCommand, new ScheduleKey(Guid.Empty, "long", "long"),
+                                                     CreateOptions(seconds, longTimeScheduledCommand.Id)));
         }
 
         private void ScheduleFailure(string[] parts)
@@ -77,7 +78,7 @@ namespace SchedulerDemo.Actors
                 _publisher.Publish(new WriteToConsole("wrong command format"));
             }
             var failScheduledCommand = new FailScheduledCommand();
-            _publisher.Publish(new ScheduleCommand(failScheduledCommand, new ScheduleKey(Guid.Empty, "fail", "fail"), CreateOptions(seconds)));
+            _publisher.Publish(new ScheduleCommand(failScheduledCommand, new ScheduleKey(Guid.Empty, "fail", "fail"), CreateOptions(seconds, failScheduledCommand.Id)));
         }
 
         private void Schedule(string[] parts)
@@ -95,7 +96,8 @@ namespace SchedulerDemo.Actors
             {
                 _publisher.Publish(new WriteToConsole("wrong command format"));
             }
-            var schedule = new ScheduleCommand(new WriteToConsoleScheduledCommand(text), new ScheduleKey(Guid.Empty, text, text), CreateOptions(seconds));
+            var cmd = new WriteToConsoleScheduledCommand(text);
+            var schedule = new ScheduleCommand(cmd, new ScheduleKey(Guid.Empty, text, text), CreateOptions(seconds,cmd.Id));
             _publisher.Publish(schedule);
         }
 
@@ -111,9 +113,11 @@ namespace SchedulerDemo.Actors
             _publisher.Publish(new Unschedule(new ScheduleKey(Guid.Empty, text, text)));
         }
 
-        private static ExecutionOptions CreateOptions(int seconds)
+        private static ExtendedExecutionOptions CreateOptions(int seconds, Guid id)
         {
-            return new ExecutionOptions<ScheduledCommandSuccessfullyProcessed>(DateTimeFacade.UtcNow.AddSeconds(seconds), ExecutionTimeout);
+            return new ExtendedExecutionOptions(DateTimeFacade.UtcNow.AddSeconds(seconds),
+                typeof(ScheduledCommandSuccessfullyProcessed),id, nameof(ScheduledCommandSuccessfullyProcessed.SourceId),
+                ExecutionTimeout);
         }
 
         private static TimeSpan ExecutionTimeout
