@@ -13,6 +13,7 @@ using Wire;
 
 namespace GridDomain.Scheduling.Integration
 {
+    
     public class ScheduledQuartzJob : IJob
     {
         private const string CommandKey = nameof(CommandKey);

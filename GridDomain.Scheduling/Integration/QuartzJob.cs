@@ -13,6 +13,7 @@ using Wire;
 
 namespace GridDomain.Scheduling.Integration
 {
+    [Obsolete("Use  ScheduledQuartzJob instead")]
     public class QuartzJob : IJob
     {
         private const string CommandKey = nameof(CommandKey);
