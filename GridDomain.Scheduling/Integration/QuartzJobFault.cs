@@ -1,4 +1,5 @@
 using System;
+using GridDomain.Scheduling.Akka.Messages;
 
 namespace GridDomain.Scheduling.Integration
 {
@@ -6,7 +7,7 @@ namespace GridDomain.Scheduling.Integration
     {
         public Exception Error { get; private set; }
 
-        public QuartzJobFault(string name, string group, Exception ex) : base(name, group)
+        public QuartzJobFault(ScheduleKey key, Exception ex) : base(key)
         {
             Error = ex;
         }

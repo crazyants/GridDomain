@@ -1,12 +1,13 @@
 using GridDomain.CQRS;
+using GridDomain.Scheduling.Akka.Messages;
 
 namespace GridDomain.Scheduling.Integration
 {
     public class QuartzJobStarted : QuartzJobStatus
     {
-        public Command Command { get; private set; }
+        public ICommand Command { get; private set; }
 
-        public QuartzJobStarted(string name, string group, Command cmd) : base(name, group)
+        public QuartzJobStarted(ScheduleKey key, ICommand cmd) : base(key)
         {
             Command = cmd;
         }
