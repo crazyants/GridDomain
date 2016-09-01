@@ -180,6 +180,15 @@ namespace GridDomain.Tests.Framework
             return Wait(() => { }, GridNode.System, failOnFault, new ExpectedMessage(typeof(TMessage), 1));
         }
 
+        protected ExpectedMessagesRecieved WaitFor<TMessageA,TMessageB>(bool failOnFault = true)
+        {
+            return Wait(() => { },
+                        GridNode.System,
+                        failOnFault, 
+                        new ExpectedMessage(typeof(TMessageA), 1),
+                        new ExpectedMessage(typeof(TMessageB), 1));
+        }
+
         private void Execute(ICommand[] commands)
         {
             Console.WriteLine("Starting execute");

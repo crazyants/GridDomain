@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.ExceptionServices;
 
 namespace GridDomain.Common
 {
@@ -19,6 +20,11 @@ namespace GridDomain.Common
             if (exeption == null) return null;
             AggregateException ex = exeption as AggregateException;
             return ex == null ? exeption : ex.UnwrapSingle();
+        }
+
+        public static void RethrowWithStackTrace(this Exception ex)
+        {
+            ExceptionDispatchInfo.Capture(ex).Throw();
         }
     }
 }

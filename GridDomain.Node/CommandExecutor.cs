@@ -50,7 +50,7 @@ namespace GridDomain.Node
                         .With<ICommandFault>(fault =>
                         {
                             var domainExcpetion = fault.Exception.UnwrapSingle();
-                            ExceptionDispatchInfo.Capture(domainExcpetion).Throw();
+                            domainExcpetion.RethrowWithStackTrace();
                         })
                         .With<CommandExecutionFinished>(finish => result = finish.ResultMessage)
                         .Default(m => { throw new InvalidMessageException(m.ToPropsString()); });

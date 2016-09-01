@@ -21,10 +21,8 @@ namespace GridDomain.Scheduling.Integration
         private const string ExecutionOptionsKey = nameof(ExecutionOptionsKey);
 
         private readonly IQuartzLogger _quartzLogger;
-        private readonly ActorSystem _actorSystem;
         private readonly IPublisher _publisher;
         private readonly ICommandExecutor _executor;
-
 
         public ScheduledQuartzJob(IQuartzLogger quartzLogger,
                                   ICommandExecutor executor,
@@ -41,32 +39,41 @@ namespace GridDomain.Scheduling.Integration
 
         public void Execute(IJobExecutionContext context)
         {
-            bool isFirstTimeFiring = true;
+            var isFirstTimeFiring = true;
             try
             {
                 isFirstTimeFiring = context.RefireCount == 0;
                 var jobDataMap = context.JobDetail.JobDataMap;
-                if (jobDataMap.ContainsKey(CommandKey))
+                var command = GetCommand(jobDataMap);
+                var options = GetExecutionOptions(jobDataMap);
+                var key = GetScheduleKey(jobDataMap);
+                try
                 {
-                    var command = GetCommand(jobDataMap);
-                    var options = GetExecutionOptions(jobDataMap);
-                    var key = GetScheduleKey(jobDataMap);
+                    _publisher.Publish(new QuartzJobStarted(key.Name, key.Group, command));
 
-                    var expect = ExpectedMessage.Once(options.SuccessEventType,options.MessageIdFieldName,options.SuccessMessageId);
+                    var expect = ExpectedMessage.Once(options.SuccessEventType, options.MessageIdFieldName,
+                        options.SuccessMessageId);
                     var plan = new CommandPlan(command, options.Timeout, expect);
-                    var result = _executor.Execute<object>(plan);
-                    _publisher.Publish(new QuartzJobCompleted(key.Name,key.Group,result));
+                    var result = _executor.Execute<object>(plan).Result;
+
+                    _publisher.Publish(new QuartzJobCompleted(key.Name, key.Group, result));
                 }
-                else
+                catch (Exception e)
                 {
-                    var messageToFire = GetEvent(jobDataMap);
-                    _publisher.Publish(messageToFire);
+                    _quartzLogger.LogFailure(context.JobDetail.Key.Name, e);
+                    _publisher.Publish(new QuartzJobFault(key.Name,key.Group,e));
+                    _publisher.Publish(CommandFault.NewTyped(command,e));
+                    e.RethrowWithStackTrace();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _quartzLogger.LogFailure(context.JobDetail.Key.Name, e);
-                var jobExecutionException = new JobExecutionException(e) { RefireImmediately = isFirstTimeFiring };
+                var jobExecutionException = new JobExecutionException(ex)
+                {
+                    RefireImmediately = isFirstTimeFiring,
+                    UnscheduleAllTriggers = false,
+                    UnscheduleFiringTrigger = false
+                };
                 throw jobExecutionException;
             }
         }
@@ -114,12 +121,6 @@ namespace GridDomain.Scheduling.Integration
             }
         }
 
-        private static DomainEvent GetEvent(JobDataMap jobDataMap)
-        {
-            var bytes = jobDataMap[EventKey] as byte[];
-            return Deserialize<DomainEvent>(bytes);
-        }
-
         private static Command GetCommand(JobDataMap jobDatMap)
         {
             var bytes = jobDatMap[CommandKey] as byte[];
@@ -142,12 +143,12 @@ namespace GridDomain.Scheduling.Integration
         {
             var jobKey = new JobKey(key.Name, key.Group);
             return JobBuilder
-                .Create<ScheduledQuartzJob>()
-                .WithIdentity(jobKey)
-                .WithDescription(key.Description)
-                .UsingJobData(jobDataMap)
-                .RequestRecovery(true)
-                .Build();
+                       .Create<ScheduledQuartzJob>()
+                       .WithIdentity(jobKey)
+                       .WithDescription(key.Description)
+                       .UsingJobData(jobDataMap)
+                       .RequestRecovery(true)
+                       .Build();
         }
     }
 }

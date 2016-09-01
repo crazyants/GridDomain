@@ -31,10 +31,21 @@ namespace GridDomain.Node.Actors
         {
             _log.Trace("Starting execution of plan {command}", commandPlan);
 
-            var waitActor = Context.System.ActorOf(Props.Create(() => new CommandWaiter(Sender, commandPlan.Command, commandPlan.ExpectedMessages)), "MessageWaiter_command_" + commandPlan.Command.Id);
+            var props = Props.Create(() => new CommandWaiter(Sender, commandPlan.Command, commandPlan.ExpectedMessages));
+            IActorRef waitActor;
+            try
+            {
+                waitActor = Context.System.ActorOf(props, "MessageWaiter_command_" + commandPlan.Command.Id);
+            }
+            catch (Exception ex) when (ex is IllegalActorNameException || ex is InvalidActorNameException)
+            {
+                var newGuid = Guid.NewGuid();
+                waitActor = Context.System.ActorOf(props, "MessageWaiter_command_" + newGuid);
+                _log.Warn("executing command plan {id} with not-default waiter {waiterId} as plan id is already occupied by a waiter", commandPlan.Command.Id,newGuid);
+            }
 
             foreach (var expectedMessage in commandPlan.ExpectedMessages)
-                _transport.Subscribe(expectedMessage.MessageType, waitActor);
+                    _transport.Subscribe(expectedMessage.MessageType, waitActor);
 
             Handle(commandPlan.Command);
         }

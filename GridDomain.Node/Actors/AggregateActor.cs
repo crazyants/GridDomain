@@ -59,7 +59,7 @@ namespace GridDomain.Node.Actors
                 _monitor.IncrementMessagesReceived();
                 if (m.Exception != null)
                 {
-                   _publisher.Publish(CommandFaultFactory.CreateGenericFor(m.Command, m.Exception));
+                   _publisher.Publish(CommandFault.NewTyped(m.Command, m.Exception));
                     return;
                 }
 
@@ -84,7 +84,7 @@ namespace GridDomain.Node.Actors
                 }
                 catch (Exception ex)
                 {
-                    _publisher.Publish(CommandFaultFactory.CreateGenericFor(cmd,ex));
+                    _publisher.Publish(CommandFault.NewTyped(cmd,ex));
                     return;
                 }
 

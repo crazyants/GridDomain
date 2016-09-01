@@ -2,9 +2,9 @@ using System;
 
 namespace GridDomain.CQRS
 {
-    public static class CommandFaultFactory
+    public static class CommandFault
     {
-        public static object CreateGenericFor(ICommand command, Exception ex)
+        public static object NewTyped(ICommand command, Exception ex)
         {
             var type = command.GetType();
             var faultType = typeof(CommandFault<>).MakeGenericType(type);

@@ -46,6 +46,7 @@ namespace GridDomain.Node.AkkaMessaging.Waiting
             if (CanContinue(MessageCounters)) return;
 
             _notifyActor.Tell(BuildAnswerMessage(message));
+            Context.Stop(Self);
         }
 
         protected abstract bool CanContinue(Dictionary<Type, int> messageCounters);

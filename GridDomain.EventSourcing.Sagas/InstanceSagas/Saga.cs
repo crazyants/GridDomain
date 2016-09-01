@@ -65,6 +65,8 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
 
             try
             {
+                //this method requires generic overload usage to work properly
+                //TODO: change to non-generic method
                 this.RaiseEvent(progress, machineEvent, message).Wait();
             }
             catch(Exception ex)
