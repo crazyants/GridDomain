@@ -27,32 +27,7 @@ namespace GridDomain.Node
                                 TransportMode transportMode,
                                 IQuartzConfig config = null)
         {
-            //TODO: replace with config
-            IActorTransport transport;
-            switch (transportMode)
-            {
-                case TransportMode.Standalone:
-                    transport = new AkkaEventBusTransport(actorSystem);
-                break;
-                case TransportMode.Cluster:
-                    transport = new DistributedPubSubTransport(actorSystem);
-                break;
-                default:
-                    throw new ArgumentException(nameof(transportMode));
-            }
-
-            container.RegisterInstance<IPublisher>(transport);
-            container.RegisterInstance<IActorSubscriber>(transport);
-            container.RegisterInstance<IActorTransport>(transport);
-            container.RegisterType<IHandlerActorTypeFactory, DefaultHandlerActorTypeFactory>();
-            container.RegisterType<IAggregateActorLocator, DefaultAggregateActorLocator>();
-            container.RegisterType<IPersistentChildsRecycleConfiguration, DefaultPersistentChildsRecycleConfiguration>();
-            container.RegisterInstance<IAppInsightsConfiguration>(AppInsightsConfigSection.Default ??
-                                                                  new DefaultAppInsightsConfiguration());
-            container.RegisterInstance<IPerformanceCountersConfiguration>(PerformanceCountersConfigSection.Default ??
-                                                                  new DefaultPerfCountersConfiguration());
-            container.RegisterInstance(actorSystem);
-            container.Register(new SchedulerConfiguration(config ?? new PersistedQuartzConfig()));
+            container.Register(new GridNodeContainerConfiguration(actorSystem,transportMode,config));
         }
     }
 

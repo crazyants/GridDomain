@@ -12,8 +12,7 @@ namespace BusinessNews.Test
         protected override IUnityContainer CreateContainer(TransportMode mode, IDbConfiguration conf)
         {
             var container = new UnityContainer();
-            var configuration = new GridNodeContainerConfiguration(ActorSystemBuilders[mode](), 
-                                                                   conf,
+            var configuration = new GridNodeContainerConfiguration(ActorSystemBuilders[mode](),
                                                                    mode,
                                                                    new InMemoryQuartzConfig());
 

@@ -167,7 +167,6 @@ namespace GridDomain.Node
                                         ActorSystem actorSystem)
         {
             unityContainer.Register(new GridNodeContainerConfiguration(actorSystem,
-                                                                       databaseConfiguration,
                                                                        _transportMode,
                                                                        quartzConfig));
 

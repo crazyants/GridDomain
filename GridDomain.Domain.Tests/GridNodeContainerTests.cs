@@ -1,5 +1,6 @@
 using GridDomain.Node;
 using GridDomain.Node.Configuration;
+using GridDomain.Node.Configuration.Composition;
 using GridDomain.Node.Configuration.Persistence;
 using Microsoft.Practices.Unity;
 
@@ -10,10 +11,7 @@ namespace GridDomain.Tests
         protected override IUnityContainer CreateContainer(TransportMode mode, IDbConfiguration conf)
         {
             var container = new UnityContainer();
-
-            CompositionRoot.Init(container,
-                ActorSystemBuilders[mode](),
-                mode);
+            container.Register(new GridNodeContainerConfiguration(ActorSystemBuilders[mode](),mode));
 
             return container;
         }

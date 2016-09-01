@@ -24,7 +24,7 @@ namespace GridDomain.Node
             return new CommandExecutor(executeActor, defaultCommandTimeout);
         }
 
-        public CommandExecutor(IActorRef commandExecutorActor, TimeSpan defaultCommandTimeout)
+        private CommandExecutor(IActorRef commandExecutorActor, TimeSpan defaultCommandTimeout)
         {
             _defaultCommandTimeout = defaultCommandTimeout;
             _commandExecutorActor = commandExecutorActor;

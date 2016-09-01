@@ -45,9 +45,7 @@ namespace GridDomain.Tools.Console
 
         public void Connect()
         {
-            NodeController = GetActor(GetSelection(nameof(GridNodeController)));
-
-            _commandExecutor = new CommandExecutor(NodeController, DefaultCommandExecutionTimeout);
+            _commandExecutor = CommandExecutor.New(_consoleSystem, DefaultCommandExecutionTimeout);
         }
       
         public void Dispose()

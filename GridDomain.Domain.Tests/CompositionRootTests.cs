@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Akka.Actor;
+using GridDomain.CQRS;
 using GridDomain.Node;
 using GridDomain.Node.Configuration;
 using GridDomain.Node.Configuration.Persistence;
+using GridDomain.Scheduling.Integration;
 using GridDomain.Tests.Framework.Configuration;
 using Microsoft.Practices.Unity;
+using Moq;
 using NUnit.Framework;
 
 namespace GridDomain.Tests
@@ -40,7 +43,7 @@ namespace GridDomain.Tests
                 Console.WriteLine("end of registration");
                 Console.WriteLine();
             }
-
+            
             container.Dispose();
         }
 
@@ -51,7 +54,9 @@ namespace GridDomain.Tests
         {
             Console.WriteLine();
             var errors = new Dictionary<ContainerRegistration, Exception>();
-            foreach (var reg in container.Registrations.Where(r => !r.RegisteredType.Name.Contains("Actor")))
+            foreach (var reg in container.Registrations
+                .Where(r => !r.RegisteredType.Name.Contains("Actor") 
+                         && !r.RegisteredType.Name.Contains(nameof(ScheduledQuartzJob))))
             {
                 try
                 {
