@@ -54,19 +54,19 @@ namespace GridDomain.Scheduling.Integration
                     .TransitionTo(ProcessingFailed));
         }
 
-        protected override Event GetMachineEvent(object message, ScheduledCommandProcessSagaData data)
-        {
-            if (message is ICommandFault)
-                return ProcessFailure;
+        //protected override Event<T> GetMachineEvent<T>(object message, ScheduledCommandProcessSagaData data) where T: class
+        //{
+        //    if (message is ICommandFault)
+        //        return ProcessFailure;
 
-            if (message is ScheduledCommandProcessingStarted)
-                return StartProcess;
+        //    if (message is ScheduledCommandProcessingStarted)
+        //        return StartProcess;
 
-            if(message.GetType() == data.SuccessEventType)
-                return ProcessSuccess;
+        //    if(message.GetType() == data.SuccessEventType)
+        //        return ProcessSuccess;
 
-            return base.GetMachineEvent(message, data);
-        }
+        //    return base.GetMachineEvent(message, data);
+        //}
         public Event<ScheduledCommandProcessingStarted> StartProcess { get; private set; }
         public Event<ICommandFault> ProcessFailure { get; private set; }
         public Event<object> ProcessSuccess { get; private set; }

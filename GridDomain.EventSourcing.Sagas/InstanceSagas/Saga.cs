@@ -73,13 +73,13 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
             }
         }
 
-        protected virtual Event GetMachineEvent(object message, TSagaData data = null)
+        protected virtual Event<T> GetMachineEvent<T>(T message, TSagaData data = null) where T:class
         {
             Event ev;
             var type = message.GetType();
             if (!_messagesToEventsMap.TryGetValue(type, out ev))
                 throw new UnbindedMessageReceivedException(message, type);
-            return ev;
+            return (Event<T>)ev;
         }
 
     }
