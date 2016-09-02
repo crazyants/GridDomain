@@ -16,23 +16,22 @@ namespace GridDomain.Scheduling.Integration
     [Obsolete("Use ScheduledQuartzJob instead")]
     public class QuartzJob : IJob
     {
-        private const string CommandKey = nameof(CommandKey);
-        private const string EventKey = nameof(EventKey);
-        private const string ScheduleKey = nameof(ScheduleKey);
-        private const string ExecutionOptionsKey = nameof(ExecutionOptionsKey);
+        public const string CommandKey = nameof(CommandKey);
+        public const string EventKey = nameof(EventKey);
+        public const string ScheduleKey = nameof(ScheduleKey);
+        public const string ExecutionOptionsKey = nameof(ExecutionOptionsKey);
 
         private readonly IQuartzLogger _quartzLogger;
         private readonly ActorSystem _actorSystem;
         private readonly IPublisher _publisher;
 
-
         public QuartzJob(IQuartzLogger quartzLogger,
                          ActorSystem actorSystem,
                          IPublisher publisher)
         {
-            Condition.NotNull(()=> quartzLogger);
-            Condition.NotNull(()=> actorSystem);
-            Condition.NotNull(()=> publisher);
+            Condition.NotNull(() => quartzLogger);
+            Condition.NotNull(() => actorSystem);
+            Condition.NotNull(() => publisher);
             Condition.NotNull(() => actorSystem.DI());
 
             _quartzLogger = quartzLogger;
@@ -121,25 +120,25 @@ namespace GridDomain.Scheduling.Integration
             return _actorSystem.DI().Props(genericActorType);
         }
 
-        private static DomainEvent GetEvent(JobDataMap jobDataMap)
+        public static DomainEvent GetEvent(JobDataMap jobDataMap)
         {
             var bytes = jobDataMap[EventKey] as byte[];
             return Deserialize<DomainEvent>(bytes);
         }
 
-        private static Command GetCommand(JobDataMap jobDatMap)
+        public static Command GetCommand(JobDataMap jobDatMap)
         {
             var bytes = jobDatMap[CommandKey] as byte[];
             return Deserialize<Command>(bytes);
         }
 
-        private static ScheduleKey GetScheduleKey(JobDataMap jobDatMap)
+        public static ScheduleKey GetScheduleKey(JobDataMap jobDatMap)
         {
             var bytes = jobDatMap[ScheduleKey] as byte[];
             return Deserialize<ScheduleKey>(bytes);
         }
 
-        private static ExecutionOptions GetExecutionOptions(JobDataMap jobDatMap)
+        public static ExecutionOptions GetExecutionOptions(JobDataMap jobDatMap)
         {
             var bytes = jobDatMap[ExecutionOptionsKey] as byte[];
             return Deserialize<ExecutionOptions>(bytes);
