@@ -8,6 +8,7 @@ namespace GridDomain.Tests.FutureEvents.Infrastructure
         public void Register(IMessagesRouter router)
         {
             router.RegisterAggregate(TestAggregatesCommandHandler.Descriptor);
+            router.RegisterHandler<TestDomainEvent, TestFutureEventHandler>("Id");
         }
     }
 }
