@@ -41,8 +41,7 @@ namespace GridDomain.Tests.Sagas.InstanceSagas
                     var soloLogger = LogManager.GetLogger();
                     soloLogger.Trace("Hello trace string");
                     Dispatch(new MakeCoffeCommand(domainEvent.SourceId,sagaData.CoffeeMachineId));
-                })
-                .TransitionTo(MakingCoffee));
+                }).TransitionTo(MakingCoffee));
 
             During(MakingCoffee, 
                 When(CoffeNotAvailable)
@@ -64,6 +63,6 @@ namespace GridDomain.Tests.Sagas.InstanceSagas
 
         public State Coding       { get; private set; }
         public State MakingCoffee { get; private set; }
-        public State Sleeping  { get; private set; }
+        public State Sleeping     { get; private set; }
     }
 }
