@@ -302,6 +302,7 @@
     <Compile Include="EventChronicles\IEventsChronicle.cs" />
     <Compile Include="EventChronicles\Play.cs" />
     <Compile Include="EventChronicles\PlayFinished.cs" />
+    <Compile Include="EventChronicles\Queries\ReplayActor.cs" />
     <Compile Include="EventChronicles\RecoveryInProgress.cs" />
     <Compile Include="GridNodeCommandingExtensions.cs" />
     <Compile Include="IAppInsightsConfiguration.cs" />
