@@ -76,6 +76,14 @@
       <HintPath>..\packages\Akka.Persistence.1.1.1.28-beta\lib\net45\Akka.Persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Akka.Persistence.Query, Version=1.1.1.28, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.Persistence.Query.1.1.1.28-beta\lib\net45\Akka.Persistence.Query.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Akka.Persistence.Query.Sql, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.Persistence.Query.Sql.1.1.1.28-beta\lib\net45\Akka.Persistence.Query.Sql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Akka.Persistence.Sql.Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Akka.Persistence.Sql.Common.1.1.1.28-beta\lib\net45\Akka.Persistence.Sql.Common.dll</HintPath>
       <Private>True</Private>
@@ -90,6 +98,10 @@
     </Reference>
     <Reference Include="Akka.Serialization.Wire, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Akka.Serialization.Wire.1.1.1.28-beta\lib\net45\Akka.Serialization.Wire.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Akka.Streams, Version=1.1.1.28, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.Streams.1.1.1.28-beta\lib\net45\Akka.Streams.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Automatonymous, Version=3.3.0.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
@@ -170,6 +182,10 @@
     </Reference>
     <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
       <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Reactive.Streams, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Reactive.Streams.1.0.0-RC1\lib\portable-net45+netcore45\Reactive.Streams.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">

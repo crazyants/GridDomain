@@ -16,8 +16,22 @@ namespace GridDomain.Node.Configuration.Akka.Hocon
                     publish-plugin-commands = on
 " + new PersistenceJournalConfig(_akka,new DomainEventAdaptersConfig()).Build() + @"
 " + new PersistenceSnapshotConfig(_akka).Build() + @"
+" + new PersistenceReadJournalConfig().Build() + @"
         }";
             return akkaPersistenceConfig;
+        }
+    }
+
+    internal class PersistenceReadJournalConfig : IAkkaConfig
+    {
+        public string Build()
+        {
+          return @"akka.persistence.query.journal.sql {
+                                class = ""Akka.Persistence.Query.Sql.SqlReadJournalProvider, Akka.Persistence.Query.Sql""
+                                write-plugin = ""
+                                refresh-interval = 1s
+                                max-buffer-size = 100
+                          }";
         }
     }
 }
