@@ -296,6 +296,17 @@
     <Compile Include="FutureEvents\Raising_future_events_too_late.cs" />
     <Compile Include="FutureEvents\Reraising_future_event.cs" />
     <Compile Include="Given_Node_When_Start_TrasportRegistrations_Test.cs" />
+    <Compile Include="MessageRouting\EventInheritanceTestsBase.cs" />
+    <Compile Include="MessageRouting\Infrastructure\BaseEvent.cs" />
+    <Compile Include="MessageRouting\Infrastructure\InheritedEvent.cs" />
+    <Compile Include="MessageRouting\Infrastructure\SampleCommand1.cs" />
+    <Compile Include="MessageRouting\Infrastructure\SampleCommand2.cs" />
+    <Compile Include="MessageRouting\Infrastructure\SampleSaga.cs" />
+    <Compile Include="MessageRouting\Infrastructure\SampleSagaData.cs" />
+    <Compile Include="MessageRouting\Infrastructure\SampleSagaFactory.cs" />
+    <Compile Include="MessageRouting\Infrastructure\TestAggregate.cs" />
+    <Compile Include="MessageRouting\Infrastructure\TestAggregatesCommandHandler.cs" />
+    <Compile Include="MessageRouting\Infrastructure\TestRouteMap.cs" />
     <Compile Include="Sagas\InstanceSagas\CustomRoutesSoftwareProgrammingSaga.cs" />
     <Compile Include="Sagas\InstanceSagas\Given_instance_saga_actor_can_be_created_for_non_domain_event.cs" />
     <Compile Include="Sagas\InstanceSagas\Given_saga_When_publishing_any_of_start_messages.cs" />
