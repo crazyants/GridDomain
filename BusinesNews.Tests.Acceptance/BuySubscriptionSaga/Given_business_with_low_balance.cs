@@ -37,8 +37,8 @@ namespace BusinesNews.Tests.Acceptance.BuySubscriptionSaga
         [TestFixtureSetUp]
         public void Given_business_with_money()
         {
-            var registerNewBusinessCommand = new RegisterNewBusinessCommand(_businessId, "test business", _accountId);
-            ExecuteAndWaitFor<BusinessCreatedEvent>(registerNewBusinessCommand);
+            var registerNewBusinessCommand = new RegisterNewCustomerCommand(_businessId, "test business", _accountId);
+            ExecuteAndWaitFor<CustomerCreatedEvent>(registerNewBusinessCommand);
 
             var createAccountCommand = new CreateAccountCommand(_accountId, _businessId);
             ExecuteAndWaitFor<BusinessBalanceCreatedProjectedNotification>(createAccountCommand);
@@ -92,7 +92,7 @@ namespace BusinesNews.Tests.Acceptance.BuySubscriptionSaga
         [Test]
         public void BusinessSubscription_in_write_model_should_not_be_set()
         {
-            var business = LoadAggregate<Business>(_businessId);
+            var business = LoadAggregate<Customer>(_businessId);
             Assert.AreNotEqual(_subscriptionId, business.SubscriptionId);
         }
 

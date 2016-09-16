@@ -27,8 +27,8 @@ namespace BusinessNews.Node
 
             container.RegisterAggregate<Account, AccountAggregateCommandsHandler>();
             container.RegisterAggregate<Bill, BillAggregateCommandsHandler>();
-            container.RegisterAggregate<Business, BusinessAggregateCommandsHandler>();
-            container.RegisterAggregate<Subscription, SubscriptionAggregateCommandsHandler>();
+            container.RegisterAggregate<Customer, CustomerAggregateCommandsHandler>();
+            container.RegisterAggregate<Cart, SubscriptionAggregateCommandsHandler>();
         }
 
         private static void RegisterSaga_BuySubscription(IUnityContainer container)

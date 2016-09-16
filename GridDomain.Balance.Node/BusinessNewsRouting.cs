@@ -16,8 +16,8 @@ namespace BusinessNews.Node
         {
             router.RegisterAggregate<Account, AccountAggregateCommandsHandler>();
             router.RegisterAggregate<Bill, BillAggregateCommandsHandler>();
-            router.RegisterAggregate<Subscription, SubscriptionAggregateCommandsHandler>();
-            router.RegisterAggregate<Business, BusinessAggregateCommandsHandler>();
+            router.RegisterAggregate<Cart, SubscriptionAggregateCommandsHandler>();
+            router.RegisterAggregate<Customer, CustomerAggregateCommandsHandler>();
 
             router.RegisterSaga(BuySubscriptionSaga.Descriptor);
 

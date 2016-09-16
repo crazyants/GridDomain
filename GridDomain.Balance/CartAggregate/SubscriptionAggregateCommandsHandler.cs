@@ -3,12 +3,12 @@ using GridDomain.CQRS.Messaging.MessageRouting;
 
 namespace BusinessNews.Domain.SubscriptionAggregate
 {
-    public class SubscriptionAggregateCommandsHandler : AggregateCommandsHandler<Subscription>
+    public class SubscriptionAggregateCommandsHandler : AggregateCommandsHandler<Cart>
     {
         public SubscriptionAggregateCommandsHandler() : base(null)
         {
             Map<CreateSubscriptionCommand>(c => c.SubscriptionId,
-                c => new Subscription(c.SubscriptionId, WellKnownOffers.Catalog[c.Offer]));
+                c => new Cart(c.SubscriptionId, WellKnownOffers.Catalog[c.Offer]));
 
             Map<ChargeSubscriptionCommand>(c => c.SubscriptionId,
                 (c, a) => a.Charge(a.Id));

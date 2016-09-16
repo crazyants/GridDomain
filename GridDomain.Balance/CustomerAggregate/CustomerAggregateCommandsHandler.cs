@@ -3,9 +3,9 @@ using GridDomain.CQRS.Messaging.MessageRouting;
 
 namespace BusinessNews.Domain.BusinessAggregate
 {
-    public class BusinessAggregateCommandsHandler : AggregateCommandsHandler<Business>
+    public class CustomerAggregateCommandsHandler : AggregateCommandsHandler<Customer>
     {
-        public BusinessAggregateCommandsHandler() : base(null)
+        public CustomerAggregateCommandsHandler() : base(null)
         {
             Map<OrderSubscriptionCommand>(command => command.BusinessId,
                                          (command, aggregate) => aggregate.OrderSubscription(command.SubscriptionId, command.OfferId));
@@ -13,8 +13,8 @@ namespace BusinessNews.Domain.BusinessAggregate
             Map<CompleteBusinessSubscriptionOrderCommand>(c => c.BusinessId,
                                                          (cmd, agr) => agr.PurchaseSubscription(cmd.SubscriptionId));
 
-            Map<RegisterNewBusinessCommand>(c => c.BusinessId,
-                                           cmd => new Business(cmd.BusinessId, cmd.Name, FreeSubscription.ID, cmd.AccountId));
+            Map<RegisterNewCustomerCommand>(c => c.BusinessId,
+                                           cmd => new Customer(cmd.BusinessId, cmd.Name, FreeSubscription.ID, cmd.AccountId));
         }
     }
 }

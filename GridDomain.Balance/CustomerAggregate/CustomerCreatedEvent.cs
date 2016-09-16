@@ -3,13 +3,13 @@ using GridDomain.EventSourcing;
 
 namespace BusinessNews.Domain.BusinessAggregate
 {
-    public class BusinessCreatedEvent : DomainEvent
+    public class CustomerCreatedEvent : DomainEvent
     {
         public Guid AccountId;
         public string Name;
         public Guid SubscriptionId;
 
-        public BusinessCreatedEvent(Guid sourceId, DateTime? createdTime = null) : base(sourceId, createdTime)
+        public CustomerCreatedEvent(Guid sourceId, DateTime? createdTime = null) : base(sourceId, createdTime)
         {
         }
     }
