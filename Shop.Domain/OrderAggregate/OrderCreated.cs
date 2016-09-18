@@ -10,7 +10,7 @@ namespace Shop.Domain
         public IReadOnlyCollection<Item> Items { get;}
         public Guid OrderId => SourceId;
 
-        public OrderCreated(Guid orderId, int number, Item[] items) : base(orderId)
+        public OrderCreated(Guid orderId, int number, params Item[] items) : base(orderId)
         {
             Number = number;
             Items = items;

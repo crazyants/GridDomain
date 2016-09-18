@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using GridDomain.EventSourcing;
+using CommonDomain;
 using GridDomain.EventSourcing.Sagas.FutureEvents;
 using NMoneys;
 
@@ -58,24 +58,6 @@ namespace Shop.Domain
         {
             TotalDiscount += e.Discount;
             DiscountedPrice = TotalPrice - TotalDiscount;
-        }
-    }
-
-    public class DiscountsMoreThenTotalPriceException
-        : Exception
-    {
-    }
-
-    public class DiscountAdded : DomainEvent
-    {
-        public Money Discount { get; }
-        public Item Item { get; }
-        public Guid OrderId => SourceId;
-
-        public DiscountAdded(Guid id, Money discount, Item item) : base(id)
-        {
-            Discount = discount;
-            Item = item;
         }
     }
 }
