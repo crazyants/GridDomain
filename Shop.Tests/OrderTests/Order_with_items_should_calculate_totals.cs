@@ -31,9 +31,9 @@ namespace Shop.Tests
         }
 
         [Then]
-        public void Order_total_discount_price_should_be_zero()
+        public void Order_total_discount_price_should_be_equal_to_total_sum()
         {
-            Assert.AreEqual(Money.Zero(), Aggregate.DiscountedPrice);
+            Assert.AreEqual(Aggregate.TotalPrice, Aggregate.DiscountedPrice);
         }
 
         [Then]

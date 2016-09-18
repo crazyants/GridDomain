@@ -17,7 +17,9 @@ namespace Shop.Tests
         {
             Aggregate = GridDomain.EventSourcing.Sagas.FutureEvents.Aggregate.Empty<T>(Guid.NewGuid());
             Aggregate.ApplyEvents(GivenEvents().ToArray());
+            When();
         }
+
         protected T Aggregate { get; private set; }
         protected abstract IEnumerable<DomainEvent> GivenEvents();
         protected virtual void When() { }

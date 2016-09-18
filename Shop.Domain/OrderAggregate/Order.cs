@@ -40,23 +40,29 @@ namespace Shop.Domain
             Number = e.Number;
             Id = e.OrderId;
             _items = e.Items.ToList();
-            RefreshTotalPrice();
+            RefreshTotals();
         }
 
-        private Money RefreshTotalPrice()
+        private void RefreshTotals()
         {
-            return TotalPrice = _items.Aggregate(Money.Zero(),(a,i) => a+i.Price);
+            TotalPrice = _items.Aggregate(Money.Zero(),(a,i) => a+i.Price);
+            RefreshDiscounted();
         }
 
         private void Apply(ItemAdded e)
         {
             _items.Add(e.Item);
-            RefreshTotalPrice();
+            RefreshTotals();
         }
 
         private void Apply(DiscountAdded e)
         {
             TotalDiscount += e.Discount;
+            RefreshDiscounted();
+        }
+
+        private void RefreshDiscounted()
+        {
             DiscountedPrice = TotalPrice - TotalDiscount;
         }
     }
