@@ -9,6 +9,7 @@ using Microsoft.Practices.Unity;
 namespace GridDomain.CQRS.Messaging.MessageRouting
 {
     public class AggregateCommandsHandler<TAggregate> : IAggregateCommandsHandler<TAggregate>,
+                                                        IAggregateCommandsHandlerDesriptor,
                                                         ICommandAggregateLocator<TAggregate>
                                                         where TAggregate : AggregateBase
     {
@@ -68,5 +69,7 @@ namespace GridDomain.CQRS.Messaging.MessageRouting
                 return _commandHandlers.Select(h => new AggregateLookupInfo(h.Key, h.Value.MachingProperty)).ToArray();
             }
         }
+
+        public Type AggregateType => typeof(TAggregate);
     }
 }
