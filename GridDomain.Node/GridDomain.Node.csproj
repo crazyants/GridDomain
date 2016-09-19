@@ -309,6 +309,8 @@
     <Compile Include="EventChronicles\IEventsChronicle.cs" />
     <Compile Include="EventChronicles\Play.cs" />
     <Compile Include="EventChronicles\PlayFinished.cs" />
+    <Compile Include="EventChronicles\Queries\DebugJournalEntry.cs" />
+    <Compile Include="EventChronicles\Queries\IDebugJournalStorage.cs" />
     <Compile Include="EventChronicles\Queries\ReplayActor.cs" />
     <Compile Include="EventChronicles\RecoveryInProgress.cs" />
     <Compile Include="GridNodeCommandingExtensions.cs" />
