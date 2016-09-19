@@ -4,7 +4,6 @@ using Akka.DI.Core;
 using GridDomain.CQRS;
 using GridDomain.CQRS.Messaging;
 using GridDomain.CQRS.Messaging.Akka;
-using GridDomain.Logging;
 using GridDomain.Node.AkkaMessaging;
 using GridDomain.Node.AkkaMessaging.Waiting;
 
@@ -12,7 +11,6 @@ namespace GridDomain.Node.Actors
 {
     public class GridNodeController : TypedActor
     {
-        private readonly ISoloLogger _log = LogManager.GetLogger();
         private readonly IPublisher _messagePublisher;
         private readonly IMessageRouteMap _messageRouting;
         private readonly IActorSubscriber _subscriber;
@@ -30,8 +28,6 @@ namespace GridDomain.Node.Actors
         public void Handle(Start msg)
         {
             _monitor.IncrementMessagesReceived();
-            LogManager.SetLoggerFactory(new DefaultLoggerFactory(new DefaultLoggerConfiguration()));
-
             var system = Context.System;
             var routingActor = system.ActorOf(system.DI().Props(msg.RoutingActorType),msg.RoutingActorType.Name);
 
@@ -50,7 +46,8 @@ namespace GridDomain.Node.Actors
 
         public void Handle(CommandPlan commandWithConfirmation)
         {
-            var waitActor = Context.System.ActorOf(Props.Create(() => new CommandWaiter(Sender, commandWithConfirmation.Command,commandWithConfirmation.ExpectedMessages)),"MessageWaiter_command_"+commandWithConfirmation.Command.Id);
+            var props = Props.Create(() => new CommandWaiter(Sender, commandWithConfirmation.Command, commandWithConfirmation.ExpectedMessages));
+            var waitActor = Context.System.ActorOf(props,"MessageWaiter_command_"+commandWithConfirmation.Command.Id);
 
             foreach(var expectedMessage in commandWithConfirmation.ExpectedMessages)
                     _subscriber.Subscribe(expectedMessage.MessageType, waitActor);

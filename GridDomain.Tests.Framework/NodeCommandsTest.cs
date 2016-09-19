@@ -4,26 +4,22 @@ using System.Linq;
 using System.Threading;
 using Akka.Actor;
 using Akka.DI.Core;
+using Akka.Persistence;
 using Akka.TestKit.NUnit;
-using Automatonymous;
 using CommonDomain.Core;
 using GridDomain.CQRS;
-using GridDomain.CQRS.Messaging;
 using GridDomain.CQRS.Messaging.Akka;
 using GridDomain.EventSourcing.Sagas;
-using GridDomain.EventSourcing.Sagas.InstanceSagas;
 using GridDomain.Logging;
 using GridDomain.Node;
 using GridDomain.Node.Actors;
 using GridDomain.Node.AkkaMessaging;
 using GridDomain.Node.AkkaMessaging.Waiting;
-using GridDomain.Node.Configuration;
 using GridDomain.Node.Configuration.Akka;
 using GridDomain.Node.Configuration.Persistence;
 using GridDomain.Tests.Framework.Configuration;
 using Microsoft.Practices.Unity;
 using NUnit.Framework;
-using Serilog.Events;
 
 namespace GridDomain.Tests.Framework
 {
@@ -60,7 +56,7 @@ namespace GridDomain.Tests.Framework
         [TestFixtureSetUp]
         protected void Init()
         {
-            LogManager.SetLoggerFactory(new DefaultLoggerFactory(new AutoTestLogConfig(LogEventLevel.Verbose)));
+            LogManager.SetLoggerFactory(new AutoTestLogFactory());
             
             var autoTestGridDomainConfiguration = new AutoTestLocalDbConfiguration();
             if (_clearDataOnStart)
@@ -88,8 +84,8 @@ namespace GridDomain.Tests.Framework
         {
             var props = GridNode.System.DI().Props<AggregateActor<T>>();
             var actor = ActorOfAsTestActorRef<AggregateActor<T>>(props, name);
-            //TODO: replace with event wait
-            Thread.Sleep(1000); //wait for actor recover
+            actor.Ask<RecoveryCompleted>(NotifyOnRecoverComplete.Instance).Wait();
+
             return actor.UnderlyingActor.Aggregate;
         }
 
@@ -98,7 +94,7 @@ namespace GridDomain.Tests.Framework
             var props = GridNode.System.DI().Props<SagaActor<TSaga, TSagaState>>();
             var name = AggregateActorName.New<TSagaState>(id).ToString();
             var actor = ActorOfAsTestActorRef<SagaActor<TSaga, TSagaState>>(props, name);
-            Thread.Sleep(1000); //wait for actor recover
+            actor.Ask<RecoveryCompleted>(NotifyOnRecoverComplete.Instance).Wait();
             return (TSagaState)actor.UnderlyingActor.Saga.Data;
         }
 
@@ -106,7 +102,7 @@ namespace GridDomain.Tests.Framework
 
         private ExpectedMessage[] GetFaults(ICommand[] commands)
         {
-            var faultGeneric = typeof(CommandFault<>);
+            var faultGeneric = typeof(Fault<>);
             return commands.Select(c => c.GetType())
                            .Distinct()
                            .Select(commandType => faultGeneric.MakeGenericType(commandType))
@@ -157,7 +153,7 @@ namespace GridDomain.Tests.Framework
             Console.WriteLine(msg.ToPropsString());
             Console.WriteLine("------end of message-----");
 
-            if (failOnCommandFault && msg.Message is ICommandFault)
+            if (failOnCommandFault && msg.Message is IFault)
             {
                 Assert.Fail($"Command fault received: {msg.ToPropsString()}");
             }

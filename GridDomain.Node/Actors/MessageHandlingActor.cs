@@ -3,40 +3,50 @@ using Akka.Actor;
 using Akka.Monitoring;
 using Akka.Monitoring.Impl;
 using GridDomain.CQRS;
+using GridDomain.CQRS.Messaging;
+using GridDomain.EventSourcing;
 using GridDomain.Logging;
 using GridDomain.Node.AkkaMessaging;
 
 namespace GridDomain.Node.Actors
 {
-    public class MessageHandlingActor<TMessage, THandler> : UntypedActor where THandler : IHandler<TMessage>
+    public class MessageHandlingActor<TMessage, THandler> : TypedActor where THandler : IHandler<TMessage>
     {
         private readonly THandler _handler;
         private readonly ISoloLogger _log = LogManager.GetLogger();
+        private readonly ActorMonitor _monitor;
+        private readonly IPublisher _publisher;
 
-        public MessageHandlingActor(THandler handler)
+        public MessageHandlingActor(THandler handler,IPublisher publisher)
         {
+            _publisher = publisher;
             _handler = handler;
-            _log.Trace("Created message handler actor {Type}", GetType().Name);
             _monitor = new ActorMonitor(Context,typeof(THandler).Name);
         }
 
-        protected override void OnReceive(object msg)
+        public virtual void Handle(TMessage msg)
         {
             _monitor.IncrementMessagesReceived();
             _log.Trace("Handler actor got message: {Message}", msg.ToPropsString());
+
             try
             {
-                _handler.Handle((TMessage)msg);
+                _handler.Handle(msg);
             }
             catch (Exception e)
             {
                 _log.Error(e);
-                throw;
+                _publisher.Publish(Fault.New(msg, e, GetSagaId(msg), typeof(THandler)));
             }
-            
         }
 
-        private readonly ActorMonitor _monitor;
+        //TODO: add custom saga id mapping
+        protected virtual Guid GetSagaId(TMessage msg)
+        {
+            ISourcedEvent e = msg as ISourcedEvent;
+            if (e != null) return e.SagaId;
+            return Guid.Empty;
+        }
 
         protected override void PreStart()
         {

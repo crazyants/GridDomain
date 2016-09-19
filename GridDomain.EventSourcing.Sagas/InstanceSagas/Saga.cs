@@ -19,12 +19,12 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
             _commandsToDispatch.Clear();
         }
 
-        public void Dispatch(Command cmd)
+        protected void Dispatch(Command cmd)
         {
             _commandsToDispatch.Add(cmd);
         }
 
-        public Saga()
+        protected Saga()
         {
             InstanceState(d => d.CurrentStateName);
         }
@@ -104,29 +104,6 @@ namespace GridDomain.EventSourcing.Sagas.InstanceSagas
             if (!_messagesToEventsMap.TryGetValue(typeof(TMessage), out ev))
                 throw new UnbindedMessageReceivedException(message, typeof(TMessage));
             return (Event<TMessage>)ev;
-        }
-    }
-
-    public class SagaTransitionException : Exception
-    {
-        public object TransitionMessage { get; }
-        public ISagaState SagaData { get; }
-
-        public SagaTransitionException(object message, ISagaState progress, Exception inner)
-            :base("Saga transition raised an error",inner)
-        {
-            SagaData = progress;
-            TransitionMessage = message;
-        }
-    }
-
-    public class NullMessageTransitException : Exception
-    {
-        public readonly object SagaData;
-
-        public NullMessageTransitException(object sagaData):base("Saga was transitioned by null message")
-        {
-            SagaData = sagaData;
         }
     }
 }

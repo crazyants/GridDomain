@@ -6,12 +6,12 @@ namespace GridDomain.Node
 {
     public class DefaultMessageLoggerHandler : IHandler<DomainEvent>,
                                                IHandler<ICommand>,
-                                               IHandler<ICommandFault>
+                                               IHandler<IFault>
     {
-        private static readonly ISoloLogger Log = LogManager.GetLogger(new DefaultLoggerFactory(new GridDomainInternalLoggerConfiguration())).ForContext("GridInternal", true);
+        private static readonly ISoloLogger Log = LogManager.GetLogger().ForContext("GridInternal", true);
         private void Handle(object msg)
         {
-            Log.Info("got message from transpot: {@msg}", msg);
+            Log.Trace("got message from transpot: {@msg}", msg);
         }
 
         public void Handle(DomainEvent msg)
@@ -24,7 +24,7 @@ namespace GridDomain.Node
             Handle((object)msg);
         }
 
-        public void Handle(ICommandFault msg)
+        public void Handle(IFault msg)
         {
             Handle((object)msg);
         }

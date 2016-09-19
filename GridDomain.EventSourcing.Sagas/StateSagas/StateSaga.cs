@@ -34,10 +34,10 @@ namespace GridDomain.EventSourcing.Sagas.StateSagas
         public TStateData State { get; }
 
         public StateMachine<TSagaStates, TSagaTriggers>
-            .TriggerWithParameters<CommandFault<TCommand>> RegisterCommandFault<TCommand>(TSagaTriggers trigger) where TCommand : ICommand
+            .TriggerWithParameters<Fault<TCommand>> RegisterCommandFault<TCommand>(TSagaTriggers trigger) where TCommand : ICommand
         {
             _registeredCommands.Add(typeof(TCommand));
-            return RegisterEvent<CommandFault<TCommand>>(trigger);
+            return RegisterEvent<Fault<TCommand>>(trigger);
         }
 
         private readonly List<Type> _registeredCommands = new List<Type>();
@@ -85,9 +85,9 @@ namespace GridDomain.EventSourcing.Sagas.StateSagas
             _messagesToDispatch.Add(commandToDispatch);
         }
 
-        protected void DispatchSagaFault<T>(CommandFault<T> commandFault) where T : ICommand
+        protected void DispatchSagaFault<T>(Fault<T> commandFault) where T : ICommand
         {
-            _messagesToDispatch.Add(new SagaFault<TStateData>(this, commandFault));
+            _messagesToDispatch.Add(commandFault);
         }
         protected void Dispatch(ISagaFault sagaFault)
         {
