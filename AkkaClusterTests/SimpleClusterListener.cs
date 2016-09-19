@@ -1,9 +1,17 @@
+using System;
 using Akka.Actor;
 using Akka.Cluster;
 using Akka.Event;
 
 namespace AkkaClusterTests
 {
+    //public class DIClusterListener : SimpleClusterListener
+    //{
+    //    public DIClusterListener( )
+    //    {
+            
+    //    }
+    //}
     public class SimpleClusterListener : UntypedActor
     {
         private string _key;
@@ -38,17 +46,17 @@ namespace AkkaClusterTests
             if (up != null)
             {
                 var mem = up;
-                Log.Info("Member is Up: {0}", mem.Member);
+                Log.Info($"Listener #{_key} deployed on {Self.Path} says: Member is Up: {mem.Member}");
             }
             else if (message is ClusterEvent.UnreachableMember)
             {
                 var unreachable = (ClusterEvent.UnreachableMember) message;
-                Log.Info("Member detected as unreachable: {0}", unreachable.Member);
+                Log.Info($"Listener #{_key} deployed on {Self.Path} says: Member detected as unreachable: {unreachable.Member}");
             }
             else if (message is ClusterEvent.MemberRemoved)
             {
                 var removed = (ClusterEvent.MemberRemoved) message;
-                Log.Info("Member is Removed: {0}", removed.Member);
+                Log.Info($"Listener #{_key} deployed on {Self.Path} says: Member is Removed: {removed.Member}");
             }
             else if (message is ClusterEvent.IMemberEvent)
             {
