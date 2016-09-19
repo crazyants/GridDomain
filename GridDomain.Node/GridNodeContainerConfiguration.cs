@@ -14,14 +14,12 @@ namespace GridDomain.Node
         private readonly IDbConfiguration _conf;
         private readonly TransportMode _transportMode;
         private readonly IQuartzConfig _config;
-        private IDbConfiguration _dbConfiguration;
 
         public GridNodeContainerConfiguration(ActorSystem actorSystem,
             IDbConfiguration conf,
             TransportMode transportMode,
             IQuartzConfig config)
         {
-            _dbConfiguration = conf;
             _config = config;
             _transportMode = transportMode;
             _actorSystem = actorSystem;
@@ -29,7 +27,7 @@ namespace GridDomain.Node
 
         public void Register(IUnityContainer container)
         {
-            CompositionRoot.Init(container, _actorSystem, _transportMode, _config, _dbConfiguration);
+            CompositionRoot.Init(container, _actorSystem, _transportMode, _config);
         }
     }
 }

@@ -13,6 +13,5 @@ namespace GridDomain.CQRS
         ICommand Command { get; }
         Exception Exception { get; }
         Guid SagaId { get; }
-        DateTime Time { get; }
     }
 }

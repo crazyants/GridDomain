@@ -2,6 +2,7 @@
 
 namespace GridDomain.Logging
 {
+
     public static class ObjectLogExtensions
     {
         private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings
@@ -11,7 +12,9 @@ namespace GridDomain.Logging
 
         public static string ToPropsString(this object o)
         {
-            return JsonConvert.SerializeObject(o,Formatting.Indented,JsonSerializerSettings);
+            return JsonConvert.SerializeObject(o,
+                Formatting.Indented,
+                JsonSerializerSettings);
         }
     }
 }
