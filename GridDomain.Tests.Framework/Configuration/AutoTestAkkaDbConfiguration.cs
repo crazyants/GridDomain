@@ -6,10 +6,10 @@ namespace GridDomain.Tests.Framework.Configuration
     public class AutoTestAkkaDbConfiguration : IAkkaDbConfiguration
     {
         public string SnapshotConnectionString
-            => "Data Source=(local);Database=AutoTestAkka;Integrated Security = true";
+            => "Data Source=(local);Database=MembershipWrite;Integrated Security = true";
 
         public string JournalConnectionString
-            => "Data Source=(local);Database=AutoTestAkka;Integrated Security = true";
+            => "Data Source=(local);Database=MembershipWrite;Integrated Security = true";
 
         public string MetadataTableName => "Metadata";
         public string JournalTableName => "Journal";

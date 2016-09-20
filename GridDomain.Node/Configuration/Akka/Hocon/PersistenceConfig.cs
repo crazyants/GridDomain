@@ -26,12 +26,13 @@ namespace GridDomain.Node.Configuration.Akka.Hocon
     {
         public string Build()
         {
-          return @"akka.persistence.query.journal.sql {
+          return @"query.journal.sql {
                                 class = ""Akka.Persistence.Query.Sql.SqlReadJournalProvider, Akka.Persistence.Query.Sql""
-                                write-plugin = ""
+                                #write-plugin = ""
                                 refresh-interval = 1s
-                                max-buffer-size = 100
+                                max-buffer-size = 10
                           }";
+            
         }
     }
 }

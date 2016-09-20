@@ -15,48 +15,102 @@ using Akka.Streams.Dsl;
 
 namespace GridDomain.Node.EventChronicles.Queries
 {
-    class ReplayActor<TAggregate> : ReceiveActor
+    class DebugJournalProjectionActor : ReceiveActor
     {
         public int LastSequenceNumber;
         public string ReplayPersistenceId; 
 
-        public ReplayActor()
+        public DebugJournalProjectionActor()
         {
+            var id = SqlReadJournal.Identifier;
            var journal = PersistenceQuery.Get(Context.System)
-                                         .ReadJournalFor<SqlReadJournal>("akka.persistence.query.journal.sql");
+                                         .ReadJournalFor<SqlReadJournal>(id);
 
            var mat = ActorMaterializer.Create(Context.System);
-              Source<string, NotUsed> allPersistenceIds = journal.AllPersistenceIds();
+           Source<string, NotUsed> allPersistenceIds = journal.AllPersistenceIds();
             //  var materizlizer = ActorMaterializer.Create(Context.System);
             //
             //  var dbWriter = new SqlBut
             //  materizlizer.Materialize(allPersistenceIds)
-            Receive<StartAll>(s =>
-            {
-                allPersistenceIds.SelectAsync(1, e =>
-                {
-                    var props = Props.Create(() => new PersistentIdResumableDumper(e));
-                    var idDumper = Context.ActorOf(props);
-                    idDumper.Ask(start)
-                })
-            })
+            
+           Receive<StartAll>(s =>
+           {
+               allPersistenceIds.SelectAsyncUnordered(1,persistenceId =>
+               {
+                   var props = Props.Create(() => new PersistentIdResumableDumper(persistenceId, null));
+                   var idDumper = Context.ActorOf(props, persistenceId);
+                   return idDumper.Ask(new PersistentIdResumableDumper.Start());
+               }).RunWith(Sink.Ignore<object>(), mat); ;
+           });
         }
 
         internal class StartAll
         {
         }
 
-        public override string PersistenceId => Self.Path.Name;
+     //   public override string PersistenceId => Self.Path.Name;
     }
 
-    public class PersistentIdResumableDumper : ReceiveActor// ReceivePersistentActor
+    public class PersistentIdResumableDumper : ReceivePersistentActor
     {
-        public PersistentIdResumableDumper(string id)
+        private long _lastSeqNumber = 0;
+        public override string PersistenceId { get; }
+        public PersistentIdResumableDumper(string id, IDebugJournalStorage storage)
         {
+            PersistenceId = "DebugJournalWriter_" + id;
+
             var journal = PersistenceQuery.Get(Context.System)
-                                     .ReadJournalFor<SqlReadJournal>("akka.persistence.query.journal.sql");
+                                          .ReadJournalFor<SqlReadJournal>("akka.persistence.query.journal.sql");
+
+            var mat = ActorMaterializer.Create(Context.System);
+
+            Command<Start>(s =>
+            {
+                List<DebugJournalEntry> entriesToSave;
+                long counter = _lastSeqNumber;
+
+                var query = journal.CurrentEventsByPersistenceId(id, _lastSeqNumber, long.MaxValue);
+                var totalSaved = SaveAll(query, _lastSeqNumber, mat);
+                _lastSeqNumber += totalSaved;
+
+                Sender.Tell(new Started());
+                Self.Tell(new MonitorCurrent());
+            });
+
+            Command<MonitorCurrent>(c =>
+            {
+                
+            });
+
+        }
+
+        private static long SaveAll(Source<EventEnvelope, NotUsed> query, long _lastSeqNumber, ActorMaterializer mat)
+        {
+            int totalProcessed = 0;
+            query.Select(e =>
+            {
+                totalProcessed++;
+                return totalProcessed;
+            }).RunWith(Sink.Ignore<int>(), mat);
+
+            return totalProcessed;
+        }
+
+        public class MonitorCurrent
+        {
+        }
+
+        public class Started
+        {
+        }
+
+        public class Start
+        {
         }
     }
+
+
+
 
     public class EventStreamDebugWriter : ActorBase
     {
