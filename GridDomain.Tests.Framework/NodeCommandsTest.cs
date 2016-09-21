@@ -30,7 +30,7 @@ namespace GridDomain.Tests.Framework
       
         private readonly Stopwatch _watch = new Stopwatch();
         private IActorSubscriber _actorSubscriber;
-        private readonly bool _clearDataOnStart;
+        protected bool _clearDataOnStart;
 
         protected NodeCommandsTest(string config, string name = null, bool clearDataOnStart = true) : base(config, name)
         {

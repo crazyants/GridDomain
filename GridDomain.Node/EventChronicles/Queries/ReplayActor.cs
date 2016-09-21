@@ -66,11 +66,8 @@ namespace GridDomain.Node.EventChronicles.Queries
 
             Command<Start>(s =>
             {
-                List<DebugJournalEntry> entriesToSave;
-                long counter = _lastSeqNumber;
-
                 var query = journal.CurrentEventsByPersistenceId(id, _lastSeqNumber, long.MaxValue);
-                var totalSaved = SaveAll(query, _lastSeqNumber, mat);
+                var totalSaved = SaveAll(query, mat);
                 _lastSeqNumber += totalSaved;
 
                 Sender.Tell(new Started());
@@ -84,14 +81,15 @@ namespace GridDomain.Node.EventChronicles.Queries
 
         }
 
-        private static long SaveAll(Source<EventEnvelope, NotUsed> query, long _lastSeqNumber, ActorMaterializer mat)
+        private static long SaveAll(Source<EventEnvelope, NotUsed> query, ActorMaterializer mat)
         {
             int totalProcessed = 0;
+            List<EventEnvelope> entriesToSave;
             query.Select(e =>
             {
                 totalProcessed++;
                 return totalProcessed;
-            }).RunWith(Sink.Ignore<int>(), mat);
+            }).RunWith(Sink.Ignore<int>(), mat).Wait();
 
             return totalProcessed;
         }

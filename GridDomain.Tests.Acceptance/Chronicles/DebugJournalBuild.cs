@@ -26,7 +26,7 @@ namespace GridDomain.Tests.Acceptance.Chronicles
     {
         public DebugJournalBuild() : base()
         {
-
+            _clearDataOnStart = false;
         }
 
         [Test]
@@ -53,14 +53,14 @@ namespace GridDomain.Tests.Acceptance.Chronicles
             //  materizlizer.Materialize(allPersistenceIds)
 
 
-            allPersistenceIds.Select(persistenceId =>
+            allPersistenceIds.Take(1).Select(persistenceId =>
             {
                 var props = Props.Create(() => new PersistentIdResumableDumper(persistenceId, null));
                 var idDumper = Sys.ActorOf(props, persistenceId);
                 return idDumper.Ask(new PersistentIdResumableDumper.Start());
             }).RunForeach(t => { },mat);//RunWith(Sink.Ignore<object>(), mat);
-            ;
-            Thread.Sleep(100000);
+            
+            Thread.Sleep(1000000);
         }
     }
 }
