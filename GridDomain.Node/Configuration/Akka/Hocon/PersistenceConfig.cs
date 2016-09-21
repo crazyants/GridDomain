@@ -28,7 +28,7 @@ namespace GridDomain.Node.Configuration.Akka.Hocon
         {
           return @"query.journal.sql {
                                 class = ""Akka.Persistence.Query.Sql.SqlReadJournalProvider, Akka.Persistence.Query.Sql""
-                                #write-plugin = ""
+                                write-plugin = ""akka.persistence.journal.sql-server""
                                 refresh-interval = 1s
                                 max-buffer-size = 10
                           }";
