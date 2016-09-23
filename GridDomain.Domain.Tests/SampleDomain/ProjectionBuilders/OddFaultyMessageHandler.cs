@@ -1,3 +1,4 @@
+using System;
 using GridDomain.CQRS;
 using GridDomain.CQRS.Messaging;
 using GridDomain.Tests.SampleDomain.Events;
@@ -22,5 +23,14 @@ namespace GridDomain.Tests.SampleDomain.ProjectionBuilders
             _publisher.Publish(new AggregateChangedEventNotification() { AggregateId = msg.SourceId });
         }
 
+        public class MessageHandleException : Exception
+        {
+            public readonly SampleAggregateChangedEvent Msg;
+
+            public MessageHandleException(SampleAggregateChangedEvent msg)
+            {
+                Msg = msg;
+            }
+        }
     }
 }
