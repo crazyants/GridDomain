@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using GridDomain.Common;
 using GridDomain.CQRS.Messaging;
 using GridDomain.CQRS.Messaging.MessageRouting;
 using GridDomain.Node;
@@ -180,7 +181,7 @@ namespace GridDomain.Tests.CommandsExecution
             }
             catch (Exception ex)
             {
-                var exception = ex.InnerException;
+                var exception = ex.UnwrapSingle();
                 Assert.IsInstanceOf<SampleAggregateException>(exception);
             }
         }

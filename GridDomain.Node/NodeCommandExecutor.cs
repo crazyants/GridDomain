@@ -41,8 +41,8 @@ namespace GridDomain.Node
                     t.Result.Match()
                         .With<IFault>(fault =>
                         {
-                            var domainExcpetion = fault.Exception.UnwrapSingle();
-                            ExceptionDispatchInfo.Capture(domainExcpetion).Throw();
+                            var domainException = fault.Exception.UnwrapSingle();
+                            ExceptionDispatchInfo.Capture(domainException).Throw();
                         })
                         .With<CommandExecutionFinished>(finish => result = finish.ResultMessage)
                         .Default(m => { throw new InvalidMessageException(m.ToPropsString()); });
