@@ -5,58 +5,30 @@ using Akka.Persistence;
 
 namespace GridDomain.Tests.Acceptance.Persistence
 {
-    internal class SqlJournalPingActor : PersistentActor
+    internal class SqlJournalPingActor : ReceivePersistentActor
     {
-        private readonly IActorRef _notifyActor;
         private List<string> _events = new List<string>();
 
-        public SqlJournalPingActor(IActorRef notifyActor)
+        public SqlJournalPingActor(string id)
         {
-            _notifyActor = notifyActor;
+            PersistenceId = id;
             var plugin = Akka.Persistence.Persistence.Instance.Apply(Context.System).JournalFor(null);
-            plugin.Tell(new object());
-        }
-
-        public override string PersistenceId => "test";
-
-        protected override void Unhandled(object message)
-        {
-            base.Unhandled(message);
-        }
-
-        protected override void OnPersistFailure(Exception cause, object @event, long sequenceNr)
-        {
-            base.OnPersistFailure(cause, @event, sequenceNr);
-        }
-
-        protected override void OnRecoveryFailure(Exception reason, object message = null)
-        {
-            base.OnRecoveryFailure(reason, message);
-        }
-
-        protected override void OnPersistRejected(Exception cause, object @event, long sequenceNr)
-        {
-            base.OnPersistRejected(cause, @event, sequenceNr);
-        }
-
-        protected override bool ReceiveRecover(object message)
-        {
-            if (message is SnapshotOffer)
+            
+            Command<SqlJournalPing>(m =>
             {
-                _events = (List<string>) ((SnapshotOffer) message).Snapshot;
-            }
-            return true;
-        }
-
-        protected override bool ReceiveCommand(object message)
-        {
-            if (message is SqlJournalPing)
-            {
-                var m = message as SqlJournalPing;
+                plugin.Ask<ReadHighestSequenceNrSuccess>(new ReadHighestSequenceNr(1, PersistenceId, Self)).Wait();
                 _events.Add(m.Payload);
-                _notifyActor.Tell(new Persisted {Payload = m.Payload});
-            }
-            return true;
+                SaveSnapshot(_events);
+                Sender.Tell(new Persisted { Payload = m.Payload });
+            });
+            Recover<SnapshotOffer>(o => _events = (List<string>)o.Snapshot);
         }
+
+        protected override bool Receive(object message)
+        {
+            return base.Receive(message);
+        }
+
+        public override string PersistenceId { get; }
     }
 }

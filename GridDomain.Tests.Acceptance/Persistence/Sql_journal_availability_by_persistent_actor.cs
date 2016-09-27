@@ -10,16 +10,16 @@ using NUnit.Framework;
 namespace GridDomain.Tests.Acceptance.Persistence
 {
     [TestFixture]
-    public class Sql_journal_availability_by_persistent_actor : TestKit
+    public class Sql_journal_availability_by_persistent_actor// : TestKit
     {
         private readonly AutoTestAkkaConfiguration _conf =
             new AutoTestAkkaConfiguration(AkkaConfiguration.LogVerbosity.Warning);
 
-        private void CHeckPersist(IActorRef actor)
+        private void CheckPersist(IActorRef actor)
         {
             var sqlJournalPing = new SqlJournalPing {Payload = "testPayload"};
-            actor.Ask(sqlJournalPing);
-            ExpectMsg<Persisted>(m => m.Payload == sqlJournalPing.Payload, TimeSpan.FromSeconds(5));
+            var ack = actor.Ask<Persisted>(sqlJournalPing, TimeSpan.FromSeconds(50)).Result;
+            Assert.AreEqual(sqlJournalPing.Payload, ack.Payload);
         }
 
 
@@ -27,16 +27,16 @@ namespace GridDomain.Tests.Acceptance.Persistence
         public void Sql_journal_is_available_for_akka_cluster_config()
         {
             var actorSystem = ActorSystem.Create(_conf.Network.SystemName, _conf.ToClusterSeedNodeSystemConfig());
-            var actor = actorSystem.ActorOf(Props.Create<SqlJournalPingActor>(TestActor),nameof(SqlJournalPingActor));
-            CHeckPersist(actor);
+            var actor = actorSystem.ActorOf(Props.Create(() => new SqlJournalPingActor("testA")));
+            CheckPersist(actor);
         }
 
         [Test]
         public void Sql_journal_is_available_for_akka_standalone_config()
         {
             var actorSystem = ActorSystem.Create(_conf.Network.SystemName, _conf.ToStandAloneSystemConfig());
-            var actor = actorSystem.ActorOf(Props.Create<SqlJournalPingActor>(TestActor), nameof(SqlJournalPingActor));
-            CHeckPersist(actor);
+            var actor = actorSystem.ActorOf(Props.Create(() => new SqlJournalPingActor("testB")));
+            CheckPersist(actor);
         }
 
 
@@ -44,24 +44,16 @@ namespace GridDomain.Tests.Acceptance.Persistence
         public void Sql_journal_is_available_for_factored_akka_cluster()
         {
             var actorSystem = ActorSystemFactory.CreateCluster(_conf, 2, 2).RandomNode();
-            var actor = actorSystem.ActorOf(Props.Create<SqlJournalPingActor>(TestActor), nameof(SqlJournalPingActor));
-            CHeckPersist(actor);
+            var actor = actorSystem.ActorOf(Props.Create(() => new SqlJournalPingActor("testC")));
+            CheckPersist(actor);
         }
 
         [Test]
         public void Sql_journal_is_available_for_factored_standalone_akka_system()
         {
             var actorSystem = _conf.CreateSystem();
-            var actor = actorSystem.ActorOf(Props.Create<SqlJournalPingActor>(TestActor), nameof(SqlJournalPingActor));
-            CHeckPersist(actor);
-        }
-
-
-        [Test]
-        public void Sql_journal_is_available_for_test_akka_config()
-        {
-            var actor = Sys.ActorOf(Props.Create<SqlJournalPingActor>(TestActor), nameof(SqlJournalPingActor));
-            CHeckPersist(actor);
+            var actor = actorSystem.ActorOf(Props.Create(() => new SqlJournalPingActor("testD")));
+            CheckPersist(actor);
         }
     }
 }
