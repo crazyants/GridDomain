@@ -97,9 +97,8 @@ namespace GridDomain.Node.Actors
                 ProcessSaga(fault);
             }, fault => fault.SagaId == Id);
 
-
             //recover messages will be provided only to right saga by using peristenceId
-            //Recover<SnapshotOffer>(offer => _sagaData = (IAggregate)offer.Snapshot);
+            Recover<SnapshotOffer>(offer => _sagaData = (IAggregate)offer.Snapshot);
             Recover<DomainEvent>(e => _sagaData.ApplyEvent(e));
             Recover<RecoveryCompleted>(message =>
             {
@@ -146,6 +145,16 @@ namespace GridDomain.Node.Actors
             PersistAll(stateChangeEvents, e => _publisher.Publish(e));
 
             Saga.Data.ClearUncommittedEvents();
+
+
+            try
+            {
+                SaveSnapshot(Saga.Data);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Error while saving snapshot for {PersistenceId}");
+            }
         }
 
         private readonly ActorMonitor _monitor = new ActorMonitor(Context, typeof(TSaga).Name);

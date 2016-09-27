@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using GridDomain.EventSourcing;
 using GridDomain.EventSourcing.Sagas.InstanceSagas;
+using GridDomain.Tests.Sagas.SoftwareProgrammingDomain.Commands;
 using GridDomain.Tests.Sagas.SoftwareProgrammingDomain.Events;
 using NUnit.Framework;
 
@@ -37,7 +38,8 @@ namespace GridDomain.Tests.Sagas.InstanceSagas
             GridNode.Transport.Publish(_coffeMadeEvent);
             GridNode.Transport.Publish(_reStartEvent);
 
-            Thread.Sleep(1000);
+            WaitFor<MakeCoffeCommand>();
+            WaitFor<MakeCoffeCommand>();
          
             _sagaDataAggregate = LoadAggregate<SagaDataAggregate<SoftwareProgrammingSagaData>>(_startMessage.SagaId);
         }
@@ -46,10 +48,9 @@ namespace GridDomain.Tests.Sagas.InstanceSagas
         [Then]
         public void Saga_state_should_contain_all_messages()
         {
-            var messagesSent = new DomainEvent[] {_startMessage, _coffeMadeEvent, _reStartEvent}
-                                    ;
+            var messagesSent = new DomainEvent[] {_startMessage, _coffeMadeEvent, _reStartEvent};
             CollectionAssert.AreEquivalent(messagesSent.Select(m => m.SourceId), 
-                _sagaDataAggregate.ReceivedMessages.Cast<DomainEvent>().Select(m => m.SourceId));
+                                          _sagaDataAggregate.ReceivedMessages.Cast<DomainEvent>().Select(m => m.SourceId));
         }
 
         [Then]

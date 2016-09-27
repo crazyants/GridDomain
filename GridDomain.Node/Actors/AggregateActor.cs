@@ -102,7 +102,7 @@ namespace GridDomain.Node.Actors
                 ProcessAggregateEvents(cmd);
             });
 
-            //Recover<SnapshotOffer>(offer => Aggregate = (TAggregate) offer.Snapshot);
+            Recover<SnapshotOffer>(offer => Aggregate = (TAggregate) offer.Snapshot);
             Recover<DomainEvent>(e => ((IAggregate) Aggregate).ApplyEvent(e));
             Recover<RecoveryCompleted>(message =>
             {
@@ -147,6 +147,15 @@ namespace GridDomain.Node.Actors
 
             });
             aggregate.ClearUncommittedEvents();
+
+            try
+            {
+                SaveSnapshot(Aggregate);
+            }
+            catch (Exception ex)
+            {
+               Log.Error(ex,$"Error while saving snapshot for {PersistenceId}");
+            }
 
             ProcessAsyncMethods(command);
         }
