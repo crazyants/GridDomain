@@ -20,14 +20,15 @@ namespace GridDomain.Tests.AsyncAggregates
         public void Nothing_is_applied_to_aggregate_on_async_finish()
         {
             var aggregate = WhenRaiseAsyncEvents();
-            Thread.Sleep(2000);
+            Thread.Sleep(AsyncWaitTime);
             Assert.Null(aggregate.Value);
         }
+        private static readonly TimeSpan AsyncWaitTime = TimeSpan.FromMilliseconds(15);
 
         private static SampleAggregate WhenRaiseAsyncEvents()
         {
             var aggregate = new SampleAggregate(Guid.NewGuid(), null);
-            aggregate.ChangeStateAsync(42,TimeSpan.FromMilliseconds(500));
+            aggregate.ChangeStateAsync(42,AsyncWaitTime);
             return aggregate;
         }
 
@@ -37,7 +38,7 @@ namespace GridDomain.Tests.AsyncAggregates
         {
             var aggregate = WhenRaiseAsyncEvents();
             var asyncEvents = aggregate.AsyncUncomittedEvents.First();
-            Thread.Sleep(1500);
+            Thread.Sleep(AsyncWaitTime);
             aggregate.FinishAsyncExecution(asyncEvents.InvocationId);
             Assert.AreEqual("42", aggregate.Value);
         }

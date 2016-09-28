@@ -47,7 +47,7 @@ namespace GridDomain.Tests.Framework
             foreach (var o in messages)
                 persistActor.Ask<EventsRepositoryActor.Persisted>(new EventsRepositoryActor.Persist(o));
 
-            Thread.Sleep(500);
+       //     Thread.Sleep(500);
         }
     }
 }

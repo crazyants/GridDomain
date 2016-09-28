@@ -44,14 +44,14 @@ namespace GridDomain.Tests.Sagas.InstanceSagas
 
             SaveInJournal<SagaDataAggregate<SoftwareProgrammingSagaData>>(sagaId,sagaDataEvent);
 
-            Thread.Sleep(100);
+            //Thread.Sleep(100);
             _coffeMakeFailedEvent = new CoffeMakeFailedEvent(Guid.NewGuid(), Guid.NewGuid(), BusinessDateTime.UtcNow,sagaId);
 
             GridNode.Transport.Publish(_coffeMakeFailedEvent);
 
+            WaitFor<GoSleepCommand>();
             //WaitFor<SagaTransitionEvent<SoftwareProgrammingSagaData>>();
-            //WaitFor<SagaTransitionEvent<SoftwareProgrammingSagaData>>();
-            Thread.Sleep(1000);
+         //   Thread.Sleep(1000);
             _sagaDataAggregate = LoadAggregate<SagaDataAggregate<SoftwareProgrammingSagaData>>(sagaId);
         }
 

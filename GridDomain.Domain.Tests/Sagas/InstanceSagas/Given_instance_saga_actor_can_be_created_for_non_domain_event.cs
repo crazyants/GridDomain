@@ -23,8 +23,7 @@ namespace GridDomain.Tests.Sagas.InstanceSagas
 
             Thread.Sleep(100);
 
-            var sagaActorName =
-                AggregateActorName.New<SagaDataAggregate<SoftwareProgrammingSagaData>>(msg.SagaId).ToString();
+            var sagaActorName = AggregateActorName.New<SagaDataAggregate<SoftwareProgrammingSagaData>>(msg.SagaId).ToString();
             var sagaHubName = typeof(ISagaInstance<CustomRoutesSoftwareProgrammingSaga, SoftwareProgrammingSagaData>).BeautyName();
 
             string path = $"akka://LocalSystem/user/SagaHub_{sagaHubName}/*/{sagaActorName}";

@@ -9,7 +9,7 @@ namespace GridDomain.Tests.SampleDomain.Commands
         {
             Parameter = parameter;
             AggregateId = aggregateId;
-            SleepTime = sleepTime??TimeSpan.FromSeconds(1);
+            SleepTime = sleepTime??TimeSpan.FromMilliseconds(50);
         }
 
         public Guid AggregateId { get; }

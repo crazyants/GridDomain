@@ -12,7 +12,7 @@ namespace GridDomain.Tests
         public void Transport_contains_all_registrations()
         {
             var transport = (AkkaEventBusTransport) GridNode.Transport;
-            Thread.Sleep(1000);
+            Thread.Sleep(200);
             CollectionAssert.IsNotEmpty(transport.Subscribers);
         }
     }

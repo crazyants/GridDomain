@@ -7,6 +7,7 @@ using GridDomain.Node.Configuration.Akka;
 using GridDomain.Node.Configuration.Persistence;
 using GridDomain.Tests.Framework;
 using GridDomain.Tests.Framework.Configuration;
+using GridDomain.Tests.Sagas.SoftwareProgrammingDomain.Commands;
 using GridDomain.Tests.Sagas.SoftwareProgrammingDomain.Events;
 using GridDomain.Tests.Sagas.StateSagas.SampleSaga;
 using Microsoft.Practices.Unity;
@@ -33,7 +34,7 @@ namespace GridDomain.Tests.Sagas.StateSagas
             publisher.Publish(new GotTiredEvent(_personId).CloneWithSaga(_sagaId));
             publisher.Publish(new CoffeMakeFailedEvent(_coffeeMachineId, _personId).CloneWithSaga(_sagaId));
 
-            Thread.Sleep(Debugger.IsAttached ? TimeSpan.FromSeconds(1000) : TimeSpan.FromSeconds(1));
+            WaitFor<MakeCoffeCommand>();
 
             _sagaState = LoadSagaState<SoftwareProgrammingSaga, SoftwareProgrammingSagaState>(_sagaId);
 

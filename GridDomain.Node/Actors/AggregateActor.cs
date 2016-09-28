@@ -95,11 +95,18 @@ namespace GridDomain.Node.Actors
                 catch (Exception ex)
                 {
                     _publisher.Publish(Fault.NewGeneric(cmd, ex, typeof(TAggregate),cmd.SagaId));
-                    Log.Error(ex,"{Aggregate} raised an expection {Exception} while executing {Command}",Aggregate,ex,cmd);
+                    Log.Error(ex,"{Aggregate} raised an exception {Exception} while executing {Command}",Aggregate,ex,cmd);
                     return;
                 }
 
                 ProcessAggregateEvents(cmd);
+            });
+            Command<SaveSnapshotFailure>(f =>
+            {
+                Log.Error(f.Cause,
+                          "Error while saving snapshot for {PersistenceId}, additional data: {Data}",
+                          PersistenceId,
+                          f.Metadata);
             });
 
             Recover<SnapshotOffer>(offer => Aggregate = (TAggregate) offer.Snapshot);
@@ -148,14 +155,7 @@ namespace GridDomain.Node.Actors
             });
             aggregate.ClearUncommittedEvents();
 
-            try
-            {
-                SaveSnapshot(Aggregate);
-            }
-            catch (Exception ex)
-            {
-               Log.Error(ex,$"Error while saving snapshot for {PersistenceId}");
-            }
+            SaveSnapshot(Aggregate);
 
             ProcessAsyncMethods(command);
         }

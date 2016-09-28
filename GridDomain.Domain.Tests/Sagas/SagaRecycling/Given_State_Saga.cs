@@ -35,8 +35,7 @@ namespace GridDomain.Tests.Sagas.SagaRecycling
             publisher.Publish(new FinishedEvent(Guid.NewGuid()).CloneWithSaga(_sagaId));
             publisher.Publish(new StartEvent(Guid.NewGuid()).CloneWithSaga(_sagaId));
 
-            Thread.Sleep(TimeSpan.FromMilliseconds(1000));
-
+            Thread.Sleep(TimeSpan.FromMilliseconds(300));
             _sagaState = LoadSagaState<SagaForRecycling, State>(_sagaId);
         }
 
