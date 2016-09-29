@@ -5,7 +5,7 @@ namespace GridDomain.Scheduling.Quartz
 {
     public class PersistedQuartzConfig : IQuartzConfig
     {
-        private const string QuartzDbConnectionStringName = "GridDomainQuartzTestString";
+        private const string QuartzDbConnectionStringName = "Quartz";
         public virtual string ConnectionString => ConfigurationManager.ConnectionStrings[QuartzDbConnectionStringName]?.ConnectionString 
                                                   ?? "Server=(local);Database=Quartz;Integrated Security = true";
 

@@ -23,7 +23,7 @@ namespace GridDomain.Tests.Framework.Configuration
 
     public class ConfigAkkaDbConfiguration : IAkkaDbConfiguration
     {
-        public const string WriteDatabaseConnectionStringName = "GridDomainWriteTestString";
+        public const string WriteDatabaseConnectionStringName = "WriteJournal";
 
         public string SnapshotConnectionString => ConfigurationManager.ConnectionStrings[WriteDatabaseConnectionStringName].ConnectionString;
 
