@@ -30,7 +30,7 @@ namespace GridDomain.Tools.Repositories
             var persistActor = CreateEventsPersistActor(id);
 
             foreach (var o in messages)
-                persistActor.Ask<EventsRepositoryActor.Persisted>(new EventsRepositoryActor.Persist(o), Timeout).Wait();
+                persistActor.Ask<EventsRepositoryActor.Persisted>(new EventsRepositoryActor.Persist(o), TimeSpan.FromSeconds(100)).Wait();
 
             persistActor.Tell(PoisonPill.Instance);
         }

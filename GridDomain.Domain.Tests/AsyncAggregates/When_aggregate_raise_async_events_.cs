@@ -38,7 +38,7 @@ namespace GridDomain.Tests.AsyncAggregates
         {
             var aggregate = WhenRaiseAsyncEvents();
             var asyncEvents = aggregate.AsyncUncomittedEvents.First();
-            Thread.Sleep(AsyncWaitTime);
+            Thread.Sleep(AsyncWaitTime + TimeSpan.FromMilliseconds(10));
             aggregate.FinishAsyncExecution(asyncEvents.InvocationId);
             Assert.AreEqual("42", aggregate.Value);
         }

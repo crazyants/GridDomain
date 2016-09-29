@@ -15,9 +15,9 @@ namespace GridDomain.Node
         private readonly IQuartzConfig _config;
 
         public GridNodeContainerConfiguration(ActorSystem actorSystem,
-            IDbConfiguration conf,
-            TransportMode transportMode,
-            IQuartzConfig config)
+                                              IDbConfiguration conf,
+                                              TransportMode transportMode,
+                                              IQuartzConfig config)
         {
             _config = config;
             _transportMode = transportMode;

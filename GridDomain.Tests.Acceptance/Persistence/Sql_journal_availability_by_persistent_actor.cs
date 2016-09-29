@@ -9,6 +9,35 @@ using NUnit.Framework;
 
 namespace GridDomain.Tests.Acceptance.Persistence
 {
+
+
+    [TestFixture]
+    public class Sql_journal_availability_by_persistent_actor_standalone  : TestKit
+    {
+        private static readonly AutoTestAkkaConfiguration _conf =
+          new AutoTestAkkaConfiguration(AkkaConfiguration.LogVerbosity.Warning);
+
+        public Sql_journal_availability_by_persistent_actor_standalone():base(_conf.ToStandAloneSystemConfig())
+        {
+            
+        }
+        [Test]
+        public void Sql_journal_is_available_for_factored_standalone_akka_system()
+        {
+            var actorSystem = _conf.CreateSystem();
+            var actor = actorSystem.ActorOf(Props.Create(() => new SqlJournalPingActor("testD")));
+            CheckPersist(actor);
+        }
+
+        private void CheckPersist(IActorRef actor)
+        {
+            var sqlJournalPing = new SqlJournalPing { Payload = "testPayload" };
+            var ack = actor.Ask<Persisted>(sqlJournalPing, TimeSpan.FromSeconds(50)).Result;
+            Assert.AreEqual(sqlJournalPing.Payload, ack.Payload);
+        }
+
+    }
+
     [TestFixture]
     public class Sql_journal_availability_by_persistent_actor// : TestKit
     {

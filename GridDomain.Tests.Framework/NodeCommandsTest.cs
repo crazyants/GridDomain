@@ -84,7 +84,7 @@ namespace GridDomain.Tests.Framework
         {
             var props = GridNode.System.DI().Props<AggregateActor<T>>();
             var actor = ActorOfAsTestActorRef<AggregateActor<T>>(props, name);
-            actor.Ask<RecoveryCompleted>(NotifyOnRecoverComplete.Instance).Wait();
+            actor.Ref.Ask<RecoveryCompleted>(NotifyOnRecoverComplete.Instance).Wait();
 
             return actor.UnderlyingActor.Aggregate;
         }
