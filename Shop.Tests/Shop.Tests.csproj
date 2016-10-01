@@ -57,9 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregateTest.cs" />
+    <Compile Include="DiscountTests\Class1.cs" />
     <Compile Include="OrderTests\Order_should_change_prices_after_discount_apply.cs" />
     <Compile Include="OrderTests\Order_should_recalculate_sums_after_item_add.cs" />
     <Compile Include="OrderTests\Empty_order_should_have_zero_totals.cs" />
+    <Compile Include="OrderTests\Order_with_items_cannot_apply_discount_to_full_price.cs" />
     <Compile Include="OrderTests\Order_with_items_should_calculate_totals.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
